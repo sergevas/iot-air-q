@@ -27,8 +27,6 @@ const String NAME = "name";
 const String TYPE = "type";
 const String DATA = "data";
 
-const int8 RESPONSE_ERROR_STATUS_VALUE = -1;
-
 String baseUrl;
 ESP8266WebServer httpRestServer(HTTP_REST_PORT);
 
@@ -105,18 +103,13 @@ String build_sensor_readings_resp_body() {
 }
 
 String build_ccs811_baseline_resp_body() {
-  bool ok = read_ccs811_baseline();
   JsonDocument doc;
   JsonObject sensor_reading = doc.add<JsonObject>();
   sensor_reading[NAME] = CCS811;
   JsonArray readings = sensor_reading[READINGS].to<JsonArray>();
   JsonObject baseline_reading = readings.add<JsonObject>();
   baseline_reading[TYPE] = READINGS_TYPE_BASELINE;
-  if (ok) {
-    baseline_reading[DATA] = ccs811_baseline;
-  } else {
-    baseline_reading[DATA] = RESPONSE_ERROR_STATUS_VALUE;
-  }
+  baseline_reading[DATA] = ccs811_baseline;
   String resp_body;
   doc.shrinkToFit();
   serializeJson(doc, resp_body);
@@ -125,7 +118,12 @@ String build_ccs811_baseline_resp_body() {
 }
 
 void get_ccs811_baseline() {
-  httpRestServer.send(200, F("application/json"), build_ccs811_baseline_resp_body());
+  bool ok = read_ccs811_baseline();
+  if (!ok) {
+    httpRestServer.send(500, F("application/json"), "{}");
+  } else {
+    httpRestServer.send(200, F("application/json"), build_ccs811_baseline_resp_body());
+  }
 }
 
 void get_sensor_readings() {
@@ -219,6 +217,15 @@ boolean read_ccs811_baseline() {
   ok = ccs811.get_baseline(&ccs811_baseline);
   if (!ok) {
     Serial.println("get_baseline: CCS811 I2C FATAL error");
+  }
+  return ok;
+}
+
+boolean write_ccs811_baseline(uint16_t ccs811_baseline) {
+  bool ok;
+  ok = ccs811.set_baseline(ccs811_baseline);
+  if (!ok) {
+    Serial.println("set_baseline: CCS811 I2C FATAL error");
   }
   return ok;
 }
