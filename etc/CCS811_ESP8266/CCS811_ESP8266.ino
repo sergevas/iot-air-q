@@ -126,6 +126,18 @@ void get_ccs811_baseline() {
   }
 }
 
+void update_ccs811_baseline() {
+  
+  ccs811_baseline;
+
+  bool ok = write_ccs811_baseline(ccs811_baseline);
+  if (!ok) {
+    httpRestServer.send(500, F("application/json"), "{}");
+  } else {
+    httpRestServer.send(200, F("application/json"), build_ccs811_baseline_resp_body());
+  }
+}
+
 void get_sensor_readings() {
   httpRestServer.send(200, F("application/json"), build_sensor_readings_resp_body());
 }
@@ -133,6 +145,7 @@ void get_sensor_readings() {
 void restServerRouting() {
   httpRestServer.on(createResourceUrl("readings"), HTTP_GET, get_sensor_readings);
   httpRestServer.on(createResourceUrl("ccs811/baseline"), HTTP_GET, get_ccs811_baseline);
+  httpRestServer.on(createResourceUrl("ccs811/baseline"), HTTP_PUT, update_ccs811_baseline);
 }
 
 static char sht3x_errorMessage[64];
