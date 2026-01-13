@@ -6,8 +6,10 @@
 #include "ccs811.h"
 
 CCS811 ccs811(-1, CCS811_SLAVEADDR_1);
-const char *WIFI_SSID = "*********";
-const char *WIFI_PASSWORD = "*********";
+uint16_t ccs811_baseline;
+
+const char *WIFI_SSID = "VAS_2M";
+const char *WIFI_PASSWORD = "LetThereBeLove!2005";
 const int WIFI_NUM_OF_RETRIES = 20;
 const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
@@ -18,11 +20,14 @@ const String READINGS_TYPE_TEMP = "TEMP";
 const String READINGS_TYPE_HUMID = "HUMID";
 const String READINGS_TYPE_CO2 = "CO2";
 const String READINGS_TYPE_TVOC = "TVOC";
+const String READINGS_TYPE_BASELINE = "BASELINE";
 const String SENSOR_READINGS = "sensorReadings";
 const String READINGS = "readings";
 const String NAME = "name";
 const String TYPE = "type";
 const String DATA = "data";
+
+const int8 RESPONSE_ERROR_STATUS_VALUE = -1;
 
 String baseUrl;
 ESP8266WebServer httpRestServer(HTTP_REST_PORT);
@@ -99,12 +104,37 @@ String build_sensor_readings_resp_body() {
   return resp_body;
 }
 
+String build_ccs811_baseline_resp_body() {
+  bool ok = read_ccs811_baseline();
+  JsonDocument doc;
+  JsonObject sensor_reading = doc.add<JsonObject>();
+  sensor_reading[NAME] = CCS811;
+  JsonArray readings = sensor_reading[READINGS].to<JsonArray>();
+  JsonObject baseline_reading = readings.add<JsonObject>();
+  baseline_reading[TYPE] = READINGS_TYPE_BASELINE;
+  if (ok) {
+    baseline_reading[DATA] = ccs811_baseline;
+  } else {
+    baseline_reading[DATA] = RESPONSE_ERROR_STATUS_VALUE;
+  }
+  String resp_body;
+  doc.shrinkToFit();
+  serializeJson(doc, resp_body);
+  Serial.println("\nCCS811 baseline response body: " + resp_body);
+  return resp_body;
+}
+
+void get_ccs811_baseline() {
+  httpRestServer.send(200, F("application/json"), build_ccs811_baseline_resp_body());
+}
+
 void get_sensor_readings() {
   httpRestServer.send(200, F("application/json"), build_sensor_readings_resp_body());
 }
 
 void restServerRouting() {
   httpRestServer.on(createResourceUrl("readings"), HTTP_GET, get_sensor_readings);
+  httpRestServer.on(createResourceUrl("ccs811/baseline"), HTTP_GET, get_ccs811_baseline);
 }
 
 static char sht3x_errorMessage[64];
@@ -125,9 +155,8 @@ void setup_sht3x() {
     Serial.println(sht3x_errorMessage);
     return;
   }
-  Serial.print("SHT31x status register: ");
-  Serial.print(status_register);
-  Serial.println();
+  Serial.print("SHT31x status register (BIN): ");
+  Serial.println(status_register, BIN);
 }
 
 void read_SHT3x(SHT3x_Readings *sht3x_readings) {
@@ -183,6 +212,15 @@ void read_CCS811(CCS811_Readings *ccs811_readings, SHT3x_Readings *sht3x_reading
       Serial.println(ccs811.errstat_str(errstat));
     }
   }
+}
+
+boolean read_ccs811_baseline() {
+  bool ok;
+  ok = ccs811.get_baseline(&ccs811_baseline);
+  if (!ok) {
+    Serial.println("get_baseline: CCS811 I2C FATAL error");
+  }
+  return ok;
 }
 
 void setup() {
