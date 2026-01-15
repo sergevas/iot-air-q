@@ -127,10 +127,15 @@ void get_ccs811_baseline() {
 }
 
 void update_ccs811_baseline() {
-  
-  ccs811_baseline;
-
-  bool ok = write_ccs811_baseline(ccs811_baseline);
+  String putBody = httpRestServer.arg("plain");
+  JsonDocument doc;
+  DeserializationError error = deserializeJson(doc, putBody);
+  if (error) {
+    Serial.print("update_ccs811_baseline deserializeJson() failed: ");
+    Serial.println(error.c_str());
+    httpRestServer.send(500, F("application/json"), "{}");
+  }
+  bool ok = write_ccs811_baseline(doc["readings"][0]["data"]);
   if (!ok) {
     httpRestServer.send(500, F("application/json"), "{}");
   } else {
