@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
 #include <Wire.h>
@@ -8,11 +9,14 @@
 CCS811 ccs811(-1, CCS811_SLAVEADDR_1);
 uint16_t ccs811_baseline;
 
-const char *WIFI_SSID = "VAS_2M";
-const char *WIFI_PASSWORD = "LetThereBeLove!2005";
+const char *WIFI_SSID = "********";
+const char *WIFI_PASSWORD = "********";
 const int WIFI_NUM_OF_RETRIES = 20;
 const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
+const char *GATEWAY_HOST = "localhost";
+const uint16_t GATEWAY_PORT = 8080;
+const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/gateway/sensor/ip-address";
 
 const String SHT31X = "SHT31X";
 const String CCS811 = "CCS811";
@@ -26,9 +30,12 @@ const String READINGS = "readings";
 const String NAME = "name";
 const String TYPE = "type";
 const String DATA = "data";
+const String IP = "ip";
+const String MAC_ADDRES = "macAddress";
 
 String baseUrl;
 ESP8266WebServer httpRestServer(HTTP_REST_PORT);
+WiFiClient httpClient;
 
 typedef struct {
   float temperature;
@@ -66,6 +73,15 @@ void initWiFi() {
   Serial.println();
   Serial.print("WiFi connected. IP ");
   Serial.println(WiFi.localIP());
+}
+
+String build_ip_advertising_request_body() {
+
+}
+
+void advertise_ip_address() {
+  Serial.print("Connecting to gateway...\nStatus: ");
+  Serial.println(httpClient.connect(GATEWAY_HOST, GATEWAY_PORT));
 }
 
 String createResourceUrl(String resourceName) {
