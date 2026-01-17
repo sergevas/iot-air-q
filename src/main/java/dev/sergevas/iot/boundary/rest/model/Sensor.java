@@ -1,4 +1,4 @@
-package dev.sergevas.iot.boundary.rest.airq.model;
+package dev.sergevas.iot.boundary.rest.model;
 
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -36,5 +36,13 @@ public class Sensor {
 
     public void setReadings(List<Reading> readings) {
         this.readings = readings;
+    }
+
+    @Override
+    public String toString() {
+        return "Sensor{" +
+                "name='" + name + '\'' +
+                ", readings=" + readings +
+                '}';
     }
 }

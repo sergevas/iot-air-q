@@ -16,7 +16,7 @@ const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
 const char *GATEWAY_HOST = "localhost";
 const uint16_t GATEWAY_PORT = 8080;
-const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/gateway/sensor/ip-address";
+const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/gateway/sensor-node/ip-address";
 
 const String SHT31X = "SHT31X";
 const String CCS811 = "CCS811";
@@ -33,7 +33,7 @@ const String DATA = "data";
 const String IP = "ip";
 const String MAC_ADDRES = "macAddress";
 
-String baseUrl;
+const String baseUrl = "/iot-air-q";
 ESP8266WebServer httpRestServer(HTTP_REST_PORT);
 WiFiClient httpClient;
 
@@ -164,9 +164,9 @@ void get_sensor_readings() {
 }
 
 void restServerRouting() {
-  httpRestServer.on(createResourceUrl("readings"), HTTP_GET, get_sensor_readings);
-  httpRestServer.on(createResourceUrl("ccs811/baseline"), HTTP_GET, get_ccs811_baseline);
-  httpRestServer.on(createResourceUrl("ccs811/baseline"), HTTP_PUT, update_ccs811_baseline);
+  httpRestServer.on(createResourceUrl("sensor/readings"), HTTP_GET, get_sensor_readings);
+  httpRestServer.on(createResourceUrl("sensor/ccs811/baseline"), HTTP_GET, get_ccs811_baseline);
+  httpRestServer.on(createResourceUrl("sensor/ccs811/baseline"), HTTP_PUT, update_ccs811_baseline);
 }
 
 static char sht3x_errorMessage[64];
