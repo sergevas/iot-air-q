@@ -17,3 +17,22 @@
 2026-01-18 02:17:17,480 INFO  (main) Installed features: [agroal, cdi, compose, hibernate-orm, jdbc-h2, narayana-jta, rest, rest-client, rest-client-jsonb, rest-jsonb, smallrye-context-propagation, vertx]
 2026-01-18 02:17:20,724 INFO  (executor-thread-1) Enter updateSensorNodeInfo(): SensorNodeInfo{ip='192.160.1.104', macAddress='00:1B:44:11:3A:B7'}
 2026-01-18 02:17:20,725 INFO  (executor-thread-1) Sensor node info updated successfully.
+2026-01-18 03:21:29,281 INFO  (main) HHH000204: Processing PersistenceUnitInfo [name: <default>]
+2026-01-18 03:21:29,427 INFO  (main) HHH000412: Hibernate ORM core version 7.1.11.Final
+2026-01-18 03:21:29,803 INFO  (main) HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-18 03:21:31,173 INFO  (main) iot-air-q 0.0.1-SNAPSHOT on JVM (powered by Quarkus 3.30.6) started in 6.635s. Listening on: http://localhost:8081
+2026-01-18 03:21:31,173 INFO  (main) Profile test activated. 
+2026-01-18 03:21:31,173 INFO  (main) Installed features: [agroal, cdi, compose, hibernate-orm, jdbc-h2, narayana-jta, rest, rest-client, rest-client-jsonb, rest-jsonb, smallrye-context-propagation, vertx]
+2026-01-18 03:21:32,596 INFO  (executor-thread-1) Enter updateSensorNodeInfo(): SensorNodeInfo{ip='192.160.1.104', macAddress='00:1B:44:11:3A:B7'}
+2026-01-18 03:21:32,597 INFO  (executor-thread-1) Sensor node info updated successfully.

@@ -1,6 +1,6 @@
-package dev.sergevas.iot.boundary.rest.gateway;
+package dev.sergevas.iot.boundary.rest;
 
-import dev.sergevas.iot.boundary.rest.gateway.model.SensorNodeInfo;
+import dev.sergevas.iot.boundary.rest.model.SensorNodeInfo;
 import io.quarkus.logging.Log;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PUT;

@@ -4,8 +4,15 @@ import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SensorData {
+
+    @JsonbProperty("macAddress")
+    private String macAddress;
+
+    @JsonbProperty("packageId")
+    private UUID packageId;
 
     @JsonbProperty("sensorReadings")
     private List<Sensor> sensorReadings;
@@ -14,8 +21,30 @@ public class SensorData {
     }
 
     @JsonbCreator
-    public SensorData(@JsonbProperty("sensorReadings") List<Sensor> sensorReadings) {
+    public SensorData(@JsonbProperty("macAddress") String macAddress,
+                      @JsonbProperty("packageId") UUID packageId,
+                      @JsonbProperty("sensorReadings") List<Sensor> sensorReadings) {
+        this.macAddress = macAddress;
+        this.packageId = packageId;
         this.sensorReadings = sensorReadings;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public SensorData setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+        return this;
+    }
+
+    public UUID getPackageId() {
+        return packageId;
+    }
+
+    public SensorData setPackageId(UUID packageId) {
+        this.packageId = packageId;
+        return this;
     }
 
     public List<Sensor> getSensorReadings() {
@@ -29,7 +58,9 @@ public class SensorData {
     @Override
     public String toString() {
         return "SensorData{" +
-                "sensorReadings=" + sensorReadings +
+                "macAddress='" + macAddress + '\'' +
+                "packageId='" + packageId + '\'' +
+                ", sensorReadings=" + sensorReadings +
                 '}';
     }
 }

@@ -1,4 +1,4 @@
-package dev.sergevas.iot.boundary.rest.gateway.model;
+package dev.sergevas.iot.boundary.rest.model;
 
 import jakarta.json.bind.annotation.JsonbProperty;
 

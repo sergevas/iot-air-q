@@ -31,7 +31,8 @@ const String NAME = "name";
 const String TYPE = "type";
 const String DATA = "data";
 const String IP = "ip";
-const String MAC_ADDRES = "macAddress";
+const String MAC_ADDRESS = "macAddress";
+const String PACKAGE_ID = "packageId";
 
 const String baseUrl = "/iot-air-q";
 ESP8266WebServer httpRestServer(HTTP_REST_PORT);
@@ -205,7 +206,7 @@ void setup_ccs811() {
   Serial.println("Setup CCS811");
   Serial.println("CCS811 library version: ");
   Serial.println(CCS811_VERSION);
-  // Enable CCS811  
+  // Enable CCS811
   ccs811.set_i2cdelay(50);  // Needed for ESP8266 because it doesn't handle I2C clock stretch correctly
   bool ok;
   ok = ccs811.begin();

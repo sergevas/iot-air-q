@@ -1,6 +1,11 @@
 package dev.sergevas.iot.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -8,23 +13,23 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "iot_air_q_sensor_node_info")
-public class IotAirQSensorNodeInfoEntity {
+public class SensorNodeInfoEntity {
 
     @Id
-    @SequenceGenerator(sequenceName = "iot_air_q_sd_seq", allocationSize = 1, name = "iot_air_q_sd_seq_gen")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "iot_air_q_sd_seq_gen")
+    @SequenceGenerator(sequenceName = "iot_air_q_sni_seq", allocationSize = 1, name = "iot_air_q_seq_gen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "iot_air_q_seq_gen")
     private Long id;
     private String ip;
-    private Double macAddress;
+    private String macAddress;
     @CurrentTimestamp
     private Instant created;
     @UpdateTimestamp
     private Instant lastModified;
 
-    public IotAirQSensorNodeInfoEntity() {
+    public SensorNodeInfoEntity() {
     }
 
-    public IotAirQSensorNodeInfoEntity(String ip, Double macAddress) {
+    public SensorNodeInfoEntity(String ip, String macAddress) {
         this.ip = ip;
         this.macAddress = macAddress;
     }
@@ -45,11 +50,11 @@ public class IotAirQSensorNodeInfoEntity {
         this.ip = ip;
     }
 
-    public Double getMacAddress() {
+    public String getMacAddress() {
         return macAddress;
     }
 
-    public void setMacAddress(Double macAddress) {
+    public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
     }
 
