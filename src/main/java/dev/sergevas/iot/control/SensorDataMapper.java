@@ -19,14 +19,19 @@ public class SensorDataMapper {
     public static List<SensorDataEntity> toSensorDataEntities(SensorData sensorData) {
         final var macAddress = sensorData.getMacAddress();
         final var packageId = sensorData.getPackageId();
-        sensorData.getSensorReadings().stream()
+        return sensorData.getSensorReadings().stream()
                 .flatMap(srs -> {
                     var sensorName = srs.getName();
                     return srs.getReadings().stream().map(sr -> new NamedSensorReading(sensorName, sr.getType(), sr.getData()));
-                })
-                .map()
-
+                }).map(nsr -> toSensorDataEntity(
+                        macAddress,
+                        packageId,
+                        nsr.sensorName,
+                        nsr.readingType,
+                        nsr.readingData
+                )).toList();
     }
 
-    record NamedSensorReading(String sensorName, String readingType, Double readingData) {};
+    record NamedSensorReading(String sensorName, String readingType, Double readingData) {
+    }
 }

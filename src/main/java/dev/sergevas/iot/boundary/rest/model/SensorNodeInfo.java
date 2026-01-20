@@ -9,6 +9,14 @@ public class SensorNodeInfo {
     @JsonbProperty("macAddress")
     private String macAddress;
 
+    public SensorNodeInfo() {
+    }
+
+    public SensorNodeInfo(String ip, String macAddress) {
+        this.ip = ip;
+        this.macAddress = macAddress;
+    }
+
     public String getIp() {
         return ip;
     }

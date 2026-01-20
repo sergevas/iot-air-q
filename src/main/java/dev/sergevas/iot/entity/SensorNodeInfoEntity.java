@@ -1,11 +1,6 @@
 package dev.sergevas.iot.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +8,8 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "iot_air_q_sensor_node_info")
+@NamedQuery(name = "SensorNodeInfoEntity.findByMacAddress",
+        query = "select s from SensorNodeInfoEntity s where s.macAddress = :macAddress")
 public class SensorNodeInfoEntity {
 
     @Id
@@ -72,5 +69,16 @@ public class SensorNodeInfoEntity {
 
     public void setLastModified(Instant lastModified) {
         this.lastModified = lastModified;
+    }
+
+    @Override
+    public String toString() {
+        return "SensorNodeInfoEntity{" +
+                "id=" + id +
+                ", ip='" + ip + '\'' +
+                ", macAddress='" + macAddress + '\'' +
+                ", created=" + created +
+                ", lastModified=" + lastModified +
+                '}';
     }
 }
