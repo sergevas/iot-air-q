@@ -1,14 +1,10 @@
 package dev.sergevas.iot.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -102,8 +98,20 @@ public class SensorDataEntity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SensorDataEntity that = (SensorDataEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
     public String toString() {
-        return "IotAirQSensorDataEntity{" +
+        return "SensorDataEntity{" +
                 "id=" + id +
                 ", macAddress='" + macAddress + '\'' +
                 ", packageId=" + packageId +
