@@ -3,6 +3,6 @@ package dev.sergevas.iot;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class AqSensorResourceIT extends GreetingResourceTest {
+class GatewayResourceIT extends GatewayResourceTest {
     // Execute the same tests but in packaged mode.
 }
