@@ -1,0 +1,68 @@
+{
+  "mappings": [
+    {
+      "id": "041c363b-d5e8-41e3-ac19-3144b3c91889",
+      "name": "Get Sensor Node CCS811 baseline",
+      "request": {
+        "urlPathTemplate": "/item/{id}.json",
+        "method": "GET",
+        "pathParameters": {
+          "id": {
+            "equalTo": "121003"
+          }
+        },
+        "formParameters": {}
+      },
+      "response": {
+        "status": 200,
+        "body": "",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "041c363b-d5e8-41e3-ac19-3144b3c91889",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2023-08-24T04:57:53.388197751Z",
+            "via": "SYSTEM"
+          }
+        }
+      },
+      "postServeActions": []
+    },
+    {
+      "id": "8e235145-2e31-4bf7-8ff1-e7efe487f9e3",
+      "name": "Get Sensor Node Readings",
+      "request": {
+        "urlPathTemplate": "/item/{id}.json",
+        "method": "GET",
+        "pathParameters": {
+          "id": {
+            "equalTo": "k1moyifavaov7t9uk6ec28sl7bl5k6nsfr4zhuuzgzg9eqxl2"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\"macAddress\":\"00:1B:44:11:3A:B7\",\"packageId\":\"f8a3c816-4722-40e1-8cce-f20cf7bbabc5\",\"sensorReadings\":[{\"name\":\"SHT31X\",\"readings\":[{\"type\":\"TEMP\",\"data\":26.93866},{\"type\":\"HUMID\",\"data\":34.47471}]},{\"name\":\"CCS811\",\"readings\":[{\"type\":\"TVOC\",\"data\":6},{\"type\":\"CO2\",\"data\":445}]}]}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "8e235145-2e31-4bf7-8ff1-e7efe487f9e3",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2023-08-24T04:57:53.388143693Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    }
+  ]
+}
