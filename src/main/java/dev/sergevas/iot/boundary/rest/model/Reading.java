@@ -10,9 +10,6 @@ public class Reading {
     @JsonbProperty("data")
     private double data;
 
-    public Reading() {
-    }
-
     @JsonbCreator
     public Reading(@JsonbProperty("type") String type,
                    @JsonbProperty("data") double data) {

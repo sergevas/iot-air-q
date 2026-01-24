@@ -17,9 +17,6 @@ public class SensorData {
     @JsonbProperty("sensorReadings")
     private List<Sensor> sensorReadings;
 
-    public SensorData() {
-    }
-
     @JsonbCreator
     public SensorData(@JsonbProperty("macAddress") String macAddress,
                       @JsonbProperty("packageId") UUID packageId,

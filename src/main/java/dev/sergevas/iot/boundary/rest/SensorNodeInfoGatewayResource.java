@@ -12,7 +12,7 @@ import static dev.sergevas.iot.control.SensorNodeInfoMapper.toSensorNodeInfo;
 import static dev.sergevas.iot.control.SensorNodeInfoMapper.toSensorNodeInfoEntity;
 
 @Path("/gateway")
-public class GatewayResource {
+public class SensorNodeInfoGatewayResource {
 
     @Inject
     NodeInfoRepository nodeInfoRepository;

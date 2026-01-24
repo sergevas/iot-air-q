@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 
 @QuarkusTest
-class GatewayResourceTest {
+class SensorNodeInfoGatewayResourceTest {
 
     @Test
     void updateSensorNodeInfo() {
