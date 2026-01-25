@@ -1,13 +1,12 @@
 package dev.sergevas.iot.boundary.persistence;
 
 import dev.sergevas.iot.entity.SensorDataEntity;
-import dev.sergevas.iot.entity.SensorNodeConfigEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @ApplicationScoped
 public class SensorDataRepository {
@@ -21,10 +20,10 @@ public class SensorDataRepository {
     }
 
     @Transactional
-    public Optional<SensorNodeConfigEntity> findByMacAddress(String macAddress) {
-        return em.createNamedQuery("SensorNodeInfoEntity.findByMacAddress", SensorNodeConfigEntity.class)
+    public List<SensorDataEntity> findByMacAddress(String macAddress) {
+        return em.createNamedQuery("SensorDataEntity.findByMacAddress", SensorDataEntity.class)
                 .setParameter("macAddress", macAddress)
                 .getResultStream()
-                .findFirst();
+                .toList();
     }
 }

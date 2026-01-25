@@ -9,6 +9,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "iot_air_q_sensor_data")
+@NamedQuery(name = "SensorDataEntity.findByMacAddress",
+        query = "select s from SensorDataEntity s where s.macAddress = :macAddress")
 public class SensorDataEntity {
 
     @Id

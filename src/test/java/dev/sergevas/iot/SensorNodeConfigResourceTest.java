@@ -19,7 +19,7 @@ class SensorNodeConfigResourceTest {
                         {"ip": "192.168.1.104", "macAddress": "00:1B:44:11:3A:B7"}
                         """)
                 .when()
-                .put("/gateway/sensor-node")
+                .put("/config")
                 .then()
                 .statusCode(204)
                 .body(emptyString());
@@ -31,7 +31,7 @@ class SensorNodeConfigResourceTest {
                 .accept("application/json")
                 .pathParam("macAddress", "00:1B:44:11:3A:B7")
                 .when()
-                .get("/gateway/sensor-node/{macAddress}")
+                .get("/config/{macAddress}")
                 .then()
                 .statusCode(200)
                 .contentType("application/json")

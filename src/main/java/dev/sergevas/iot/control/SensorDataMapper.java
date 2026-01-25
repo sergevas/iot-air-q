@@ -1,7 +1,7 @@
 package dev.sergevas.iot.control;
 
-import dev.sergevas.iot.boundary.rest.model.SensorData;
 import dev.sergevas.iot.entity.SensorDataEntity;
+import dev.sergevas.iot.entity.model.SensorData;
 
 import java.util.List;
 import java.util.UUID;

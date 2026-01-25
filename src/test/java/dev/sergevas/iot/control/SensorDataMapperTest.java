@@ -1,8 +1,8 @@
 package dev.sergevas.iot.control;
 
-import dev.sergevas.iot.boundary.rest.model.Reading;
-import dev.sergevas.iot.boundary.rest.model.Sensor;
-import dev.sergevas.iot.boundary.rest.model.SensorData;
+import dev.sergevas.iot.entity.model.Reading;
+import dev.sergevas.iot.entity.model.Sensor;
+import dev.sergevas.iot.entity.model.SensorData;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

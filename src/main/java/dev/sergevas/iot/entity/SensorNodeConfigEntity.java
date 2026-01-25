@@ -8,16 +8,19 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "iot_air_q_sensor_node_config")
-@NamedQuery(name = "SensorNodeInfoEntity.findByMacAddress",
+@NamedQuery(name = "SensorNodeConfigEntity.findByMacAddress",
         query = "select s from SensorNodeConfigEntity s where s.macAddress = :macAddress")
+@NamedQuery(name = "SensorNodeConfigEntity.findByMacAddressAndPropName",
+        query = "select s from SensorNodeConfigEntity s where s.macAddress = :macAddress and s.propName = :propName")
 public class SensorNodeConfigEntity {
 
     @Id
     @SequenceGenerator(sequenceName = "iot_air_q_sni_seq", allocationSize = 1, name = "iot_air_q_seq_gen")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "iot_air_q_seq_gen")
     private Long id;
-    private String ip;
     private String macAddress;
+    private String propName;
+    private String propValue;
     @CurrentTimestamp
     private Instant created;
     @UpdateTimestamp
@@ -26,9 +29,10 @@ public class SensorNodeConfigEntity {
     public SensorNodeConfigEntity() {
     }
 
-    public SensorNodeConfigEntity(String ip, String macAddress) {
-        this.ip = ip;
+    public SensorNodeConfigEntity(String macAddress, String propName, String propValue) {
         this.macAddress = macAddress;
+        this.propName = propName;
+        this.propValue = propValue;
     }
 
     public Long getId() {
@@ -39,20 +43,28 @@ public class SensorNodeConfigEntity {
         this.id = id;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
     public String getMacAddress() {
         return macAddress;
     }
 
     public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
+    }
+
+    public String getPropName() {
+        return propName;
+    }
+
+    public void setPropName(String propName) {
+        this.propName = propName;
+    }
+
+    public String getPropValue() {
+        return propValue;
+    }
+
+    public void setPropValue(String macAddress) {
+        this.propValue = macAddress;
     }
 
     public Instant getCreated() {
@@ -75,8 +87,9 @@ public class SensorNodeConfigEntity {
     public String toString() {
         return "SensorNodeInfoEntity{" +
                 "id=" + id +
-                ", ip='" + ip + '\'' +
                 ", macAddress='" + macAddress + '\'' +
+                ", propName='" + propName + '\'' +
+                ", propValue='" + propValue + '\'' +
                 ", created=" + created +
                 ", lastModified=" + lastModified +
                 '}';
