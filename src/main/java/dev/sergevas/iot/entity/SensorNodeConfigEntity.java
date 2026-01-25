@@ -7,10 +7,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "iot_air_q_sensor_node_info")
+@Table(name = "iot_air_q_sensor_node_config")
 @NamedQuery(name = "SensorNodeInfoEntity.findByMacAddress",
-        query = "select s from SensorNodeInfoEntity s where s.macAddress = :macAddress")
-public class SensorNodeInfoEntity {
+        query = "select s from SensorNodeConfigEntity s where s.macAddress = :macAddress")
+public class SensorNodeConfigEntity {
 
     @Id
     @SequenceGenerator(sequenceName = "iot_air_q_sni_seq", allocationSize = 1, name = "iot_air_q_seq_gen")
@@ -23,10 +23,10 @@ public class SensorNodeInfoEntity {
     @UpdateTimestamp
     private Instant lastModified;
 
-    public SensorNodeInfoEntity() {
+    public SensorNodeConfigEntity() {
     }
 
-    public SensorNodeInfoEntity(String ip, String macAddress) {
+    public SensorNodeConfigEntity(String ip, String macAddress) {
         this.ip = ip;
         this.macAddress = macAddress;
     }

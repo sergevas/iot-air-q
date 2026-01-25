@@ -16,7 +16,7 @@ const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
 const char *GATEWAY_HOST = "localhost";
 const uint16_t GATEWAY_PORT = 8080;
-const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/gateway/sensor-node/ip-address";
+const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/config";
 
 const String SHT31X = "SHT31X";
 const String CCS811 = "CCS811";

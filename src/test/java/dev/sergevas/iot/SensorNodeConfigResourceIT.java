@@ -3,6 +3,6 @@ package dev.sergevas.iot;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class SensorNodeInfoGatewayResourceIT extends SensorNodeInfoGatewayResourceTest {
+class SensorNodeConfigResourceIT extends SensorNodeConfigResourceTest {
     // Execute the same tests but in packaged mode.
 }
