@@ -24,7 +24,7 @@ public class SensorNodeConfigUseCase {
         Optional.ofNullable(sensorNodeInfo.getIp()).ifPresent(ip ->
                 sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), IP, ip)));
         Optional.ofNullable(sensorNodeInfo.getCss811Baseline()).ifPresent(bl ->
-                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getCss811Baseline(), CCS811_BASELINE, bl)));
+                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), CCS811_BASELINE, bl)));
         Log.info("Sensor node info saved successfully");
     }
 
@@ -38,14 +38,14 @@ public class SensorNodeConfigUseCase {
                         sensorNodeInfo.setIp(entity.getPropValue());
                     }
                     if (CCS811_BASELINE.equals(entity.getPropName())) {
-                        sensorNodeInfo.setMacAddress(entity.getPropValue());
+                        sensorNodeInfo.setCss811Baseline(entity.getPropValue());
                     }
                 });
         return Optional.of(sensorNodeInfo).filter(sni -> !sni.isNew());
     }
 
     public String getSensorNodeIp(String macAddress) {
-        return sensorNodeConfigRepository.findByMacAddressAndProperty(macAddress, "IP")
+        return sensorNodeConfigRepository.findByMacAddressAndProperty(macAddress, IP)
                 .map(SensorNodeConfigEntity::getPropValue)
                 .orElseThrow(() -> new IotAirQualityException("Sensor node IP not found for macAddress=" + macAddress));
     }

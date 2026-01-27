@@ -16,14 +16,14 @@ public class SensorNodeConfigRepository {
     EntityManager em;
 
     @Transactional
-    public void save(SensorNodeConfigEntity entity) {
-        findByMacAddressAndProperty(entity.getMacAddress(), entity.getPropValue())
+    public void save(final SensorNodeConfigEntity entity) {
+        findByMacAddressAndProperty(entity.getMacAddress(), entity.getPropName())
                 .ifPresentOrElse(existingEntity -> existingEntity.setPropValue(entity.getPropValue()),
                         () -> em.persist(entity));
     }
 
     @Transactional
-    public Optional<SensorNodeConfigEntity> findByMacAddressAndProperty(String macAddress, String propName) {
+    public Optional<SensorNodeConfigEntity> findByMacAddressAndProperty(final String macAddress, final String propName) {
         return em.createNamedQuery("SensorNodeConfigEntity.findByMacAddressAndPropName", SensorNodeConfigEntity.class)
                 .setParameter("macAddress", macAddress)
                 .setParameter("propName", propName)
@@ -32,7 +32,7 @@ public class SensorNodeConfigRepository {
     }
 
     @Transactional
-    public List<SensorNodeConfigEntity> findByMacAddress(String macAddress) {
+    public List<SensorNodeConfigEntity> findByMacAddress(final String macAddress) {
         return em.createNamedQuery("SensorNodeConfigEntity.findByMacAddress", SensorNodeConfigEntity.class)
                 .setParameter("macAddress", macAddress)
                 .getResultStream()

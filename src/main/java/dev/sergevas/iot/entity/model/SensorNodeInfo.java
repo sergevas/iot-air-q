@@ -1,6 +1,9 @@
 package dev.sergevas.iot.entity.model;
 
 import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbTransient;
+
+import static java.util.Objects.nonNull;
 
 public class SensorNodeInfo {
 
@@ -12,12 +15,6 @@ public class SensorNodeInfo {
     private String css811Baseline;
 
     public SensorNodeInfo() {
-    }
-
-    public SensorNodeInfo(String macAddress, String ip, String css811Baseline) {
-        this.macAddress = macAddress;
-        this.ip = ip;
-        this.css811Baseline = css811Baseline;
     }
 
     public String getMacAddress() {
@@ -44,8 +41,9 @@ public class SensorNodeInfo {
         this.css811Baseline = css811Baseline;
     }
 
+    @JsonbTransient
     public boolean isNew() {
-        return css811Baseline != null && !css811Baseline.isEmpty();
+        return !(nonNull(ip) || nonNull(css811Baseline));
     }
 
     @Override

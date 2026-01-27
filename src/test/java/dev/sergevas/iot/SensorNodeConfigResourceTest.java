@@ -11,12 +11,12 @@ import static org.hamcrest.Matchers.equalTo;
 class SensorNodeConfigResourceTest {
 
     @Test
-    void updateSensorNodeInfo() {
+    void givenSensorNodeInfo_whenPUT_thenShouldUpdateSuccessfully() {
         given()
                 .header("Content-Type", "application/json")
                 .accept("application/json")
                 .body("""
-                        {"ip": "192.168.1.104", "macAddress": "00:1B:44:11:3A:B7"}
+                        {"ip": "192.168.1.105", "macAddress": "00:1B:44:11:3A:B8"}
                         """)
                 .when()
                 .put("/config")
@@ -26,7 +26,7 @@ class SensorNodeConfigResourceTest {
     }
 
     @Test
-    void getSensorNodeInfo() {
+    void givenExistedSensorNodeInfo_whenGET_thenShouldReturnSuccessfully() {
         given()
                 .accept("application/json")
                 .pathParam("macAddress", "00:1B:44:11:3A:B7")
@@ -35,7 +35,20 @@ class SensorNodeConfigResourceTest {
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
-                .body("ip", equalTo("192.168.1.104"),
-                        "macAddress", equalTo("00:1B:44:11:3A:B7"));
+                .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
+                        "ip", equalTo("192.168.1.104"),
+                        "css811Baseline", equalTo("0x8A6C"));
+    }
+
+    @Test
+    void givenNotExistedSensorNodeInfo_whenGET_thenShouldReturnNotFound() {
+        given()
+                .accept("application/json")
+                .pathParam("macAddress", "00:00:00:00:00:00")
+                .when()
+                .get("/config/{macAddress}")
+                .then()
+                .statusCode(404)
+                .body(emptyString());
     }
 }
