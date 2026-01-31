@@ -2,14 +2,12 @@ package dev.sergevas.iot.control;
 
 import dev.sergevas.iot.IotAirQualityException;
 import dev.sergevas.iot.boundary.persistence.SensorNodeConfigRepository;
-import dev.sergevas.iot.boundary.rest.client.SensorNodeClient;
 import dev.sergevas.iot.entity.SensorNodeConfigEntity;
 import dev.sergevas.iot.entity.model.Reading;
 import dev.sergevas.iot.entity.model.SensorNodeInfo;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import static dev.sergevas.iot.entity.vo.SensorProperties.CCS811_BASELINE;
 
@@ -19,11 +17,8 @@ public class CSS811UseCase {
     @Inject
     SensorNodeConfigUseCase sensorNodeConfigUseCase;
 
-    @RestClient
-    SensorNodeClient sensorNodeClient;
-
     @Inject
-    SensorNodeResourceUrlBuilder sensorNodeResourceUrlBuilder;
+    SensorNodeRestClientProvider sensorNodeRestClientProvider;
 
     @Inject
     SensorNodeConfigRepository sensorNodeConfigRepository;
@@ -31,7 +26,7 @@ public class CSS811UseCase {
     public SensorNodeInfo refreshBaseline(String macAddress) {
         Log.infof("Enter refreshBaseline() for macAddress=%s", macAddress);
         var ip = sensorNodeConfigUseCase.getSensorNodeIp(macAddress);
-        var sensor = sensorNodeClient.getCCS811Baseline(sensorNodeResourceUrlBuilder.buildCCS811BaselineUrl(ip));
+        var sensor = sensorNodeRestClientProvider.getClient(ip).getCCS811Baseline();
         var baseline = sensor.getReadings().stream().findFirst()
                 .filter(r -> "BASELINE".equals(r.getType()))
                 .map(Reading::getData)

@@ -51,4 +51,19 @@ class SensorNodeConfigResourceTest {
                 .statusCode(404)
                 .body(emptyString());
     }
+
+    @Test
+    void givenDeployedSensorNode_whenRefreshBaseline_thenShouldReturnSuccessfully() {
+        given()
+                .accept("application/json")
+                .pathParam("macAddress", "00:1B:44:11:3A:B7")
+                .when()
+                .get("/config/{macAddress}/ccs811/baseline")
+                .then()
+                .statusCode(200)
+                .contentType("application/json")
+                .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
+                        "ip", equalTo("192.168.1.104"),
+                        "css811Baseline", equalTo("0x8A6C"));
+    }
 }
