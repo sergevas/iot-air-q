@@ -12,7 +12,7 @@ public class Reading {
 
     @JsonbCreator
     public Reading(@JsonbProperty("type") String type,
-                   @JsonbProperty("data") double data) {
+                   @JsonbProperty("data") Number data) {
         this.type = type;
         this.data = data;
     }

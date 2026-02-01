@@ -31,7 +31,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n\"name\":\"CCS811\",\n\"readings\":[\n{\n\"type\":\"BASELINE\",\n\"data\":567\n}\n]\n}",
+        "body": "{\"name\":\"CCS811\",\"readings\":[{\"type\":\"BASELINE\",\"data\":567}]}",
         "headers": {
           "Content-Type": "application/json"
         }
