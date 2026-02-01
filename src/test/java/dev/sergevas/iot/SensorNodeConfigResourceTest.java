@@ -16,7 +16,7 @@ class SensorNodeConfigResourceTest {
                 .header("Content-Type", "application/json")
                 .accept("application/json")
                 .body("""
-                        {"ip": "192.168.1.105", "macAddress": "00:1B:44:11:3A:B8"}
+                        {"ip": "192.168.1.105", "macAddress": "00:1B:44:11:3A:B8", "port": 9881}
                         """)
                 .when()
                 .put("/config")
@@ -37,8 +37,8 @@ class SensorNodeConfigResourceTest {
                 .contentType("application/json")
                 .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
                         "ip", equalTo("localhost"),
-                        "port", equalTo("9881"),
-                        "css811Baseline", equalTo("567"));
+                        "port", equalTo(9881),
+                        "css811Baseline", equalTo(567));
     }
 
     @Test
@@ -56,15 +56,19 @@ class SensorNodeConfigResourceTest {
     @Test
     void givenDeployedSensorNode_whenRefreshBaseline_thenShouldReturnSuccessfully() {
         given()
+                .header("Content-Type", "application/json")
                 .accept("application/json")
                 .pathParam("macAddress", "00:1B:44:11:3A:B7")
+                .body("{}")
                 .when()
-                .get("/config/{macAddress}/ccs811/baseline")
+                .post("/config/{macAddress}/ccs811/baseline")
+                .prettyPeek()
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
                 .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
                         "ip", equalTo("localhost"),
-                        "css811Baseline", equalTo("567"));
+                        "css811Baseline", equalTo(567),
+                        "port", equalTo(9881));
     }
 }

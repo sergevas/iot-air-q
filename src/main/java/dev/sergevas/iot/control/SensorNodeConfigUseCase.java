@@ -27,9 +27,9 @@ public class SensorNodeConfigUseCase {
         ofNullable(sensorNodeInfo.getIp()).ifPresent(ip ->
                 sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), IP, ip)));
         ofNullable(sensorNodeInfo.getPort()).ifPresent(port ->
-                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), PORT, port)));
+                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), PORT, String.valueOf(port))));
         ofNullable(sensorNodeInfo.getCss811Baseline()).ifPresent(bl ->
-                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), CCS811_BASELINE, bl)));
+                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), CCS811_BASELINE, String.valueOf(bl))));
         Log.info("Sensor node info saved successfully");
     }
 
