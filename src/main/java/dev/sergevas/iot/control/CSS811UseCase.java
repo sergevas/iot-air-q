@@ -37,4 +37,13 @@ public class CSS811UseCase {
         return sensorNodeConfigUseCase.getSensorNodeInfo(macAddress)
                 .orElseThrow(() -> new IotAirQualityException("Sensor node info not found after baseline refresh for macAddress=" + macAddress));
     }
+
+    public SensorNodeInfo getBaseline(String macAddress) {
+        var ccs811PropValue = sensorNodeConfigRepository.findByMacAddressAndProperty(macAddress, CCS811_BASELINE)
+                .map(SensorNodeConfigEntity::getPropValue)
+                .orElseThrow(() -> new IotAirQualityException("Sensor node CCS811_BASELINE not found for macAddress=" + macAddress));
+        var sensorNodeInfo = new SensorNodeInfo();
+        sensorNodeInfo.setCss811Baseline(ccs811PropValue);
+        return sensorNodeInfo;
+    }
 }

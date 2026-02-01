@@ -5,12 +5,7 @@ import dev.sergevas.iot.control.SensorNodeConfigUseCase;
 import dev.sergevas.iot.entity.model.SensorNodeInfo;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -48,13 +43,24 @@ public class SensorNodeConfigResource {
                 });
     }
 
-    @GET
+    @POST
     @Path("{macAddress}/ccs811/baseline")
-    @Consumes(WILDCARD)
+    @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     public SensorNodeInfo refreshBaseline(@PathParam("macAddress") String macAddress) {
         Log.infof("Enter refreshBaseline(): macAddress=%s", macAddress);
         var sensorNodeInfo = css811UseCase.refreshBaseline(macAddress);
+        Log.infof("CCS811 baseline refreshed successfully for macAddress=%s", macAddress);
+        return sensorNodeInfo;
+    }
+
+    @GET
+    @Path("{macAddress}/ccs811/baseline")
+    @Consumes(WILDCARD)
+    @Produces(APPLICATION_JSON)
+    public SensorNodeInfo getStoredBaseline(@PathParam("macAddress") String macAddress) {
+        Log.infof("Enter refreshBaseline(): macAddress=%s", macAddress);
+        var sensorNodeInfo = css811UseCase.getBaseline(macAddress);
         Log.infof("CCS811 baseline refreshed successfully for macAddress=%s", macAddress);
         return sensorNodeInfo;
     }
