@@ -10,14 +10,14 @@ import java.net.URI;
 @ApplicationScoped
 public class SensorNodeRestClientProvider {
 
-    private static final String SENSOR_NODE_URL_TEMPLATE = "http://%s/%s/%s";
+    private static final String SENSOR_NODE_URL_TEMPLATE = "http://%s:%s/%s/%s";
 
     @ConfigProperty(name = "sensor.node.endpoint.context.root")
     String contextRoot;
 
-    public SensorNodeClient getClient(String ip) {
+    public SensorNodeClient getClient(String ip, String port) {
         return RestClientBuilder.newBuilder()
-                .baseUri(URI.create(SENSOR_NODE_URL_TEMPLATE.formatted(ip, contextRoot, "ccs811/baseline")))
+                .baseUri(URI.create(SENSOR_NODE_URL_TEMPLATE.formatted(ip, port, contextRoot, "ccs811/baseline")))
                 .build(SensorNodeClient.class);
     }
 }

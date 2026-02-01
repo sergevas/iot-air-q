@@ -36,8 +36,9 @@ class SensorNodeConfigResourceTest {
                 .statusCode(200)
                 .contentType("application/json")
                 .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
-                        "ip", equalTo("192.168.1.104"),
-                        "css811Baseline", equalTo("0x8A6C"));
+                        "ip", equalTo("localhost"),
+                        "port", equalTo("9881"),
+                        "css811Baseline", equalTo("567"));
     }
 
     @Test
@@ -63,7 +64,7 @@ class SensorNodeConfigResourceTest {
                 .statusCode(200)
                 .contentType("application/json")
                 .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
-                        "ip", equalTo("192.168.1.104"),
-                        "css811Baseline", equalTo("0x8A6C"));
+                        "ip", equalTo("localhost"),
+                        "css811Baseline", equalTo("567"));
     }
 }

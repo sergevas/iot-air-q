@@ -26,7 +26,8 @@ public class CSS811UseCase {
     public SensorNodeInfo refreshBaseline(String macAddress) {
         Log.infof("Enter refreshBaseline() for macAddress=%s", macAddress);
         var ip = sensorNodeConfigUseCase.getSensorNodeIp(macAddress);
-        var sensor = sensorNodeRestClientProvider.getClient(ip).getCCS811Baseline();
+        var port = sensorNodeConfigUseCase.getSensorNodePort(macAddress);
+        var sensor = sensorNodeRestClientProvider.getClient(ip, port).getCCS811Baseline();
         var baseline = sensor.getReadings().stream().findFirst()
                 .filter(r -> "BASELINE".equals(r.getType()))
                 .map(Reading::getData)

@@ -12,7 +12,7 @@ public class SensorDataMapper {
                                                       UUID packageId,
                                                       String sensorName,
                                                       String readingType,
-                                                      Double readingData) {
+                                                      Number readingData) {
         return new SensorDataEntity(macAddress, packageId, sensorName, readingType, readingData);
     }
 
@@ -32,6 +32,6 @@ public class SensorDataMapper {
                 )).toList();
     }
 
-    record NamedSensorReading(String sensorName, String readingType, Double readingData) {
+    record NamedSensorReading(String sensorName, String readingType, Number readingData) {
     }
 }

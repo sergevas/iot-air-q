@@ -16,7 +16,7 @@ class SensorNodeConfigUseCaseTest {
 
     @Test
     void givenPersistedSensorNodeConfigWithIp_whenGetSensorNodeIp_thenShouldReturnSuccessfully() {
-        assertEquals("192.168.1.104", sensorNodeConfigUseCase.getSensorNodeIp("00:1B:44:11:3A:B7"));
+        assertEquals("localhost", sensorNodeConfigUseCase.getSensorNodeIp("00:1B:44:11:3A:B7"));
     }
 
     @Test

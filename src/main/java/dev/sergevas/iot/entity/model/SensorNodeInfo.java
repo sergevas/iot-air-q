@@ -9,6 +9,8 @@ public class SensorNodeInfo {
 
     @JsonbProperty("ip")
     private String ip;
+    @JsonbProperty("port")
+    private String port;
     @JsonbProperty("macAddress")
     private String macAddress;
     @JsonbProperty("css811Baseline")
@@ -33,6 +35,14 @@ public class SensorNodeInfo {
         this.ip = ip;
     }
 
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
     public String getCss811Baseline() {
         return css811Baseline;
     }
@@ -51,6 +61,7 @@ public class SensorNodeInfo {
         return "SensorNodeInfo{" +
                 "macAddress='" + macAddress + '\'' +
                 ", ip='" + ip + '\'' +
+                ", port='" + port + '\'' +
                 ", css811Baseline'" + css811Baseline + '\'' +
                 '}';
     }

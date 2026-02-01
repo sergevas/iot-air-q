@@ -1,6 +1,12 @@
 package dev.sergevas.iot.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.Instant;
@@ -21,14 +27,14 @@ public class SensorDataEntity {
     private UUID packageId;
     private String sensorName;
     private String readingType;
-    private Double readingData;
+    private Number readingData;
     @CurrentTimestamp
     private Instant created;
 
     public SensorDataEntity() {
     }
 
-    public SensorDataEntity(String macAddress, UUID packageId, String sensorName, String readingType, Double readingData) {
+    public SensorDataEntity(String macAddress, UUID packageId, String sensorName, String readingType, Number readingData) {
         this.macAddress = macAddress;
         this.packageId = packageId;
         this.sensorName = sensorName;
@@ -81,11 +87,11 @@ public class SensorDataEntity {
         return this;
     }
 
-    public Double getReadingData() {
+    public Number getReadingData() {
         return readingData;
     }
 
-    public SensorDataEntity setReadingData(Double readingData) {
+    public SensorDataEntity setReadingData(Number readingData) {
         this.readingData = readingData;
         return this;
     }

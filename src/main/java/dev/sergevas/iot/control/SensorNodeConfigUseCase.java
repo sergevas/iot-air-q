@@ -12,6 +12,9 @@ import java.util.Optional;
 
 import static dev.sergevas.iot.entity.vo.SensorProperties.CCS811_BASELINE;
 import static dev.sergevas.iot.entity.vo.SensorProperties.IP;
+import static dev.sergevas.iot.entity.vo.SensorProperties.PORT;
+import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 @ApplicationScoped
 public class SensorNodeConfigUseCase {
@@ -21,9 +24,11 @@ public class SensorNodeConfigUseCase {
 
     public void saveSensorNodeInfo(SensorNodeInfo sensorNodeInfo) {
         Log.info("Enter saveSensorNodeInfo(): " + sensorNodeInfo);
-        Optional.ofNullable(sensorNodeInfo.getIp()).ifPresent(ip ->
+        ofNullable(sensorNodeInfo.getIp()).ifPresent(ip ->
                 sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), IP, ip)));
-        Optional.ofNullable(sensorNodeInfo.getCss811Baseline()).ifPresent(bl ->
+        ofNullable(sensorNodeInfo.getPort()).ifPresent(port ->
+                sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), PORT, port)));
+        ofNullable(sensorNodeInfo.getCss811Baseline()).ifPresent(bl ->
                 sensorNodeConfigRepository.save(new SensorNodeConfigEntity(sensorNodeInfo.getMacAddress(), CCS811_BASELINE, bl)));
         Log.info("Sensor node info saved successfully");
     }
@@ -37,16 +42,25 @@ public class SensorNodeConfigUseCase {
                     if (IP.equals(entity.getPropName())) {
                         sensorNodeInfo.setIp(entity.getPropValue());
                     }
+                    if (PORT.equals(entity.getPropName())) {
+                        sensorNodeInfo.setPort(entity.getPropValue());
+                    }
                     if (CCS811_BASELINE.equals(entity.getPropName())) {
                         sensorNodeInfo.setCss811Baseline(entity.getPropValue());
                     }
                 });
-        return Optional.of(sensorNodeInfo).filter(sni -> !sni.isNew());
+        return of(sensorNodeInfo).filter(sni -> !sni.isNew());
     }
 
     public String getSensorNodeIp(String macAddress) {
         return sensorNodeConfigRepository.findByMacAddressAndProperty(macAddress, IP)
                 .map(SensorNodeConfigEntity::getPropValue)
                 .orElseThrow(() -> new IotAirQualityException("Sensor node IP not found for macAddress=" + macAddress));
+    }
+
+    public String getSensorNodePort(String macAddress) {
+        return sensorNodeConfigRepository.findByMacAddressAndProperty(macAddress, PORT)
+                .map(SensorNodeConfigEntity::getPropValue)
+                .orElseThrow(() -> new IotAirQualityException("Sensor node PORT not found for macAddress=" + macAddress));
     }
 }
