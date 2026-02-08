@@ -3,6 +3,8 @@ package dev.sergevas.iot.entity.model;
 import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.json.bind.annotation.JsonbTransient;
 
+import java.util.Objects;
+
 import static java.util.Objects.nonNull;
 
 public class SensorNodeInfo {
@@ -62,6 +64,21 @@ public class SensorNodeInfo {
     @JsonbTransient
     public boolean isNew() {
         return !(nonNull(ip) || nonNull(css811Baseline));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SensorNodeInfo that = (SensorNodeInfo) o;
+        return Objects.equals(ip, that.ip) && Objects.equals(port, that.port)
+                && Objects.equals(macAddress, that.macAddress)
+                && Objects.equals(css811Baseline, that.css811Baseline);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ip, port, macAddress, css811Baseline);
     }
 
     @Override

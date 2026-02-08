@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SensorData {
@@ -50,6 +51,20 @@ public class SensorData {
 
     public void setSensorReadings(List<Sensor> sensorReadings) {
         this.sensorReadings = sensorReadings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SensorData that = (SensorData) o;
+        return Objects.equals(macAddress, that.macAddress) && Objects.equals(packageId, that.packageId)
+                && Objects.equals(sensorReadings, that.sensorReadings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(macAddress, packageId, sensorReadings);
     }
 
     @Override

@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Sensor {
 
@@ -36,6 +37,19 @@ public class Sensor {
 
     public void setReadings(List<Reading> readings) {
         this.readings = readings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sensor sensor = (Sensor) o;
+        return Objects.equals(name, sensor.name) && Objects.equals(readings, sensor.readings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, readings);
     }
 
     @Override

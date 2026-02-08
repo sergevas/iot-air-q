@@ -3,6 +3,8 @@ package dev.sergevas.iot.entity.model;
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
+import java.util.Objects;
+
 public class Reading {
 
     @JsonbProperty("type")
@@ -31,6 +33,19 @@ public class Reading {
 
     public void setData(Number data) {
         this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reading reading = (Reading) o;
+        return Objects.equals(type, reading.type) && Objects.equals(data, reading.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, data);
     }
 
     @Override

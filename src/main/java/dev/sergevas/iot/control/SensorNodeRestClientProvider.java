@@ -13,15 +13,14 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @ApplicationScoped
 public class SensorNodeRestClientProvider {
 
-    private static final String SENSOR_NODE_URL_TEMPLATE = "http://%s:%s/%s/%s";
+    private static final String SENSOR_NODE_URL_TEMPLATE = "http://%s:%s/%s";
 
     @Inject
     SensorNodeEndpoint sensorNodeEndpoint;
 
     public SensorNodeClient getClient(String ip, String port) {
         return RestClientBuilder.newBuilder()
-                .baseUri(URI.create(SENSOR_NODE_URL_TEMPLATE.formatted(ip, port, sensorNodeEndpoint.contextRoot(),
-                        "ccs811/baseline")))
+                .baseUri(URI.create(SENSOR_NODE_URL_TEMPLATE.formatted(ip, port, sensorNodeEndpoint.contextRoot())))
                 .connectTimeout(sensorNodeEndpoint.connectTimeout(), MILLISECONDS)
                 .readTimeout(sensorNodeEndpoint.readTimeout(), MILLISECONDS)
                 .build(SensorNodeClient.class);
