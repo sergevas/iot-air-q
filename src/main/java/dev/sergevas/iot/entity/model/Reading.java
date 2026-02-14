@@ -10,11 +10,11 @@ public class Reading {
     @JsonbProperty("type")
     private String type;
     @JsonbProperty("data")
-    private Number data;
+    private Double data;
 
     @JsonbCreator
     public Reading(@JsonbProperty("type") String type,
-                   @JsonbProperty("data") Number data) {
+                   @JsonbProperty("data") Double data) {
         this.type = type;
         this.data = data;
     }
@@ -27,11 +27,11 @@ public class Reading {
         this.type = type;
     }
 
-    public Number getData() {
+    public Double getData() {
         return data;
     }
 
-    public void setData(Number data) {
+    public void setData(Double data) {
         this.data = data;
     }
 

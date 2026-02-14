@@ -1,11 +1,11 @@
-package dev.sergevas.iot;
+package dev.sergevas.iot.boundary.rest.api;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.emptyString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 @QuarkusTest
 class SensorNodeConfigResourceTest {
@@ -27,7 +27,13 @@ class SensorNodeConfigResourceTest {
 
     @Test
     void givenExistedSensorNodeInfo_whenGET_thenShouldReturnSuccessfully() {
-        given()
+        assertEquals("""
+                {
+                    "css811Baseline": 567.0,
+                    "ip": "localhost",
+                    "macAddress": "00:1B:44:11:3A:B7",
+                    "port": 9881
+                }""", given()
                 .accept("application/json")
                 .pathParam("macAddress", "00:1B:44:11:3A:B7")
                 .when()
@@ -35,10 +41,8 @@ class SensorNodeConfigResourceTest {
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
-                .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
-                        "ip", equalTo("localhost"),
-                        "port", equalTo(9881),
-                        "css811Baseline", equalTo(567));
+                .extract()
+                .body().asString(), false);
     }
 
     @Test
@@ -55,7 +59,13 @@ class SensorNodeConfigResourceTest {
 
     @Test
     void givenDeployedSensorNode_whenRefreshBaseline_thenShouldReturnSuccessfully() {
-        given()
+        assertEquals("""
+                {
+                    "css811Baseline": 567.0,
+                    "ip": "localhost",
+                    "macAddress": "00:1B:44:11:3A:B7",
+                    "port": 9881
+                }""", given()
                 .header("Content-Type", "application/json")
                 .accept("application/json")
                 .pathParam("macAddress", "00:1B:44:11:3A:B7")
@@ -66,9 +76,7 @@ class SensorNodeConfigResourceTest {
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
-                .body("macAddress", equalTo("00:1B:44:11:3A:B7"),
-                        "ip", equalTo("localhost"),
-                        "css811Baseline", equalTo(567),
-                        "port", equalTo(9881));
+                .extract()
+                .body().asString(), false);
     }
 }

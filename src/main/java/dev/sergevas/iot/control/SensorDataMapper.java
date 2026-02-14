@@ -2,6 +2,7 @@ package dev.sergevas.iot.control;
 
 import dev.sergevas.iot.entity.SensorDataEntity;
 import dev.sergevas.iot.entity.model.SensorData;
+import dev.sergevas.iot.entity.model.SensorReading;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +13,7 @@ public class SensorDataMapper {
                                                       UUID packageId,
                                                       String sensorName,
                                                       String readingType,
-                                                      Number readingData) {
+                                                      Double readingData) {
         return new SensorDataEntity(macAddress, packageId, sensorName, readingType, readingData);
     }
 
@@ -22,16 +23,14 @@ public class SensorDataMapper {
         return sensorData.getSensorReadings().stream()
                 .flatMap(srs -> {
                     var sensorName = srs.getName();
-                    return srs.getReadings().stream().map(sr -> new NamedSensorReading(sensorName, sr.getType(), sr.getData()));
+                    return srs.getReadings().stream().map(sr ->
+                            new SensorReading(sensorName, sr.getType(), sr.getData()));
                 }).map(nsr -> toSensorDataEntity(
                         macAddress,
                         packageId,
-                        nsr.sensorName,
-                        nsr.readingType,
-                        nsr.readingData
+                        nsr.sensorName(),
+                        nsr.readingType(),
+                        nsr.readingData()
                 )).toList();
-    }
-
-    record NamedSensorReading(String sensorName, String readingType, Number readingData) {
     }
 }

@@ -21,8 +21,8 @@ class SensorDataMapperTest {
                 List.of(
                         new Sensor("SHT31X", List.of(new Reading("TEMP", 26.93866),
                                 new Reading("HUMID", 34.47471))),
-                        new Sensor("CCS811", List.of(new Reading("TVOC", 6),
-                                new Reading("CO2", 445)))));
+                        new Sensor("CCS811", List.of(new Reading("TVOC", 6.0),
+                                new Reading("CO2", 445.0)))));
         var sensorDataEntities = SensorDataMapper.toSensorDataEntities(sensorData);
         assertNotNull(sensorDataEntities);
         assertEquals(4, sensorDataEntities.size());

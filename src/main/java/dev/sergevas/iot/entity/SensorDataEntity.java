@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CurrentTimestamp;
@@ -15,8 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "iot_air_q_sensor_data")
-@NamedQuery(name = "SensorDataEntity.findByMacAddress",
-        query = "select s from SensorDataEntity s where s.macAddress = :macAddress")
+//@NamedQuery(name = "SensorDataEntity.findByMacAddress", query = "select s from SensorDataEntity s where s.macAddress = :macAddress")
 public class SensorDataEntity {
 
     @Id
@@ -27,14 +25,14 @@ public class SensorDataEntity {
     private UUID packageId;
     private String sensorName;
     private String readingType;
-    private Number readingData;
+    private Double readingData;
     @CurrentTimestamp
     private Instant created;
 
     public SensorDataEntity() {
     }
 
-    public SensorDataEntity(String macAddress, UUID packageId, String sensorName, String readingType, Number readingData) {
+    public SensorDataEntity(String macAddress, UUID packageId, String sensorName, String readingType, Double readingData) {
         this.macAddress = macAddress;
         this.packageId = packageId;
         this.sensorName = sensorName;
@@ -87,11 +85,11 @@ public class SensorDataEntity {
         return this;
     }
 
-    public Number getReadingData() {
+    public Double getReadingData() {
         return readingData;
     }
 
-    public SensorDataEntity setReadingData(Number readingData) {
+    public SensorDataEntity setReadingData(Double readingData) {
         this.readingData = readingData;
         return this;
     }

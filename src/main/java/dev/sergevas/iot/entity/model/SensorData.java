@@ -71,7 +71,7 @@ public class SensorData {
     public String toString() {
         return "SensorData{" +
                 "macAddress='" + macAddress + '\'' +
-                "packageId='" + packageId + '\'' +
+                ", packageId='" + packageId + '\'' +
                 ", sensorReadings=" + sensorReadings +
                 '}';
     }

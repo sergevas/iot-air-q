@@ -13,7 +13,7 @@ create table if not exists iot_air_q_sensor_data
     package_id uuid not null,
     sensor_name text not null,
     reading_type text not null,
-    reading_data decimal not null,
+    reading_data numeric not null,
     created timestamp not null,
     constraint iaq_sd_pkey primary key (id)
 );

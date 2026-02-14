@@ -1,4 +1,4 @@
-package dev.sergevas.iot;
+package dev.sergevas.iot.boundary.rest.api;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
