@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Readings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .pagination-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-controls select {
+            width: auto;
+        }
+
+        .page-size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-size-control input {
+            width: 60px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+            color: #212529;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .pagination-controls button {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .pagination-controls button.active {
+            background: #764ba2;
+            font-weight: 700;
+        }
+
+        .pagination-controls button:disabled {
+            background: #dee2e6;
+            cursor: not-allowed;
+            color: #999;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .status.disconnected {
+            color: #dc3545;
+        }
+
+        .status::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pagination-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sort-controls {
+                flex-direction: column;
+            }
+
+            .sort-controls select {
+                width: 100%;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Sensor Readings Dashboard</h1>
+
+    <div class="filter-section">
+        <form id="filterForm" method="get">
+            <div class="filter-grid">
+                <div class="form-group">
+                    <label for="macAddress">MAC Address</label>
+                    <input type="text" id="macAddress" name="macAddress" value="{macAddress}" placeholder="e.g., 00:1A:2B:3C:4D:5E">
+                </div>
+                <div class="form-group">
+                    <label for="sensorName">Sensor Name</label>
+                    <input type="text" id="sensorName" name="sensorName" value="{sensorName}" placeholder="e.g., temperature">
+                </div>
+                <div class="form-group">
+                    <label for="readingType">Reading Type</label>
+                    <input type="text" id="readingType" name="readingType" value="{readingType}" placeholder="e.g., CELSIUS">
+                </div>
+                <div class="form-group">
+                    <label for="packageId">Package ID</label>
+                    <input type="text" id="packageId" name="packageId" value="{packageId}" placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000">
+                </div>
+            </div>
+
+            <div class="controls">
+                <button type="submit">Apply Filters</button>
+                <button type="button" class="secondary" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </form>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="autoRefresh" checked>
+            <label for="autoRefresh">Auto-refresh on new data</label>
+        </div>
+
+        <div class="checkbox-group" style="margin-top: 10px;">
+            <div class="status" id="connectionStatus">Connected</div>
+        </div>
+    </div>
+
+    <div class="pagination-section">
+        <div class="pagination-info">
+            Showing <span id="recordCount">{totalRecords}</span> total records
+            {#if totalPages gt 1}
+                | Page <span id="currentPage">{pageNumber}</span> of <span id="totalPages">{totalPages}</span>
+            {/if}
+        </div>
+
+        <div class="sort-controls">
+            <label for="sortOrder" style="margin-bottom: 0;">Sort by Created:</label>
+            <select id="sortOrder" name="sortOrder" onchange="handleSortChange()">
+                <option value="DESC" {#if sortOrder eq 'DESC'}selected{/if}>Newest First</option>
+                <option value="ASC" {#if sortOrder eq 'ASC'}selected{/if}>Oldest First</option>
+            </select>
+        </div>
+
+        <div class="page-size-control">
+            <label for="pageSize" style="margin-bottom: 0;">Page Size:</label>
+            <input type="number" id="pageSize" name="pageSize" value="{pageSize}" min="1" max="100" onchange="handlePageSizeChange()">
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <p>Loading data...</p>
+    </div>
+
+    <div class="table-wrapper">
+        {#if readings.size() gt 0}
+            <table>
+                <thead>
+                    <tr>
+                        <th>MAC Address</th>
+                        <th>Sensor Name</th>
+                        <th>Reading Type</th>
+                        <th>Reading Data</th>
+                        <th>Package ID</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#for reading in readings}
+                        <tr>
+                            <td>{reading.macAddress}</td>
+                            <td>{reading.sensorName}</td>
+                            <td>{reading.readingType}</td>
+                            <td><strong>{reading.readingData}</strong></td>
+                            <td style="font-size: 12px;">{reading.packageId}</td>
+                            <td>
+                                {#if reading.created != null}
+                                    <span>{reading.created}</span>
+                                {#else}
+                                    <span>-</span>
+                                {/if}
+                            </td>
+                        </tr>
+                    {/for}
+                </tbody>
+            </table>
+        {#else}
+            <div class="no-data">
+                <p>No sensor readings found. Try adjusting your filters.</p>
+            </div>
+        {/if}
+    </div>
+
+    {#if totalPages gt 1}
+        <div class="pagination-controls" id="paginationControls">
+            <button id="prevBtn" type="button" onclick="previousPage()" {#if pageNumber eq 1}disabled{/if}>← Previous</button>
+
+            <!-- Simple pagination: show only 5 pages around current page or all if less than 5 -->
+            {#if totalPages le 5}
+                {#for i in 1..totalPages}
+                    {#if i eq pageNumber}
+                        <button type="button" class="active" disabled>{i}</button>
+                    {#else}
+                        <button type="button" onclick="goToPage({i})">{i}</button>
+                    {/if}
+                {/for}
+            {#else}
+                <!-- Page buttons for large page counts -->
+                {#if pageNumber gt 1}
+                    <button type="button" onclick="goToPage(1)">1</button>
+                    {#if pageNumber gt 3}
+                        <span>...</span>
+                    {/if}
+                {/if}
+
+                {#if pageNumber - 1 gt 1}
+                    <button type="button" onclick="goToPage({pageNumber - 1})">{pageNumber - 1}</button>
+                {/if}
+
+                <button type="button" class="active" disabled>{pageNumber}</button>
+
+                {#if pageNumber + 1 lt totalPages}
+                    <button type="button" onclick="goToPage({pageNumber + 1})">{pageNumber + 1}</button>
+                {/if}
+
+                {#if pageNumber lt totalPages - 2}
+                    <span>...</span>
+                {/if}
+
+                {#if pageNumber lt totalPages}
+                    <button type="button" onclick="goToPage({totalPages})">{totalPages}</button>
+                {/if}
+            {/if}
+
+            <button id="nextBtn" type="button" onclick="nextPage()" {#if pageNumber eq totalPages}disabled{/if}>Next →</button>
+        </div>
+    {/if}
+</div>
+
+<script>
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = wsProtocol + '//' + window.location.host + '/iot-air-q/ws/sensor-readings';
+    let ws = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    const reconnectDelay = 3000;
+
+    function connectWebSocket() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            return;
+        }
+
+        try {
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = function() {
+                console.log('WebSocket connected');
+                reconnectAttempts = 0;
+                updateConnectionStatus(true);
+            };
+
+            ws.onmessage = function(event) {
+                console.log('WebSocket message received:', event.data);
+                if (event.data === 'REFRESH' && document.getElementById('autoRefresh').checked) {
+                    refreshData();
+                }
+            };
+
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+                updateConnectionStatus(false);
+            };
+
+            ws.onclose = function() {
+                console.log('WebSocket closed');
+                updateConnectionStatus(false);
+                attemptReconnect();
+            };
+        } catch (error) {
+            console.error('Failed to connect WebSocket:', error);
+            updateConnectionStatus(false);
+            attemptReconnect();
+        }
+    }
+
+    function attemptReconnect() {
+        if (reconnectAttempts < maxReconnectAttempts) {
+            reconnectAttempts++;
+            console.log('Attempting to reconnect... (attempt ' + reconnectAttempts + '/' + maxReconnectAttempts + ')');
+            setTimeout(connectWebSocket, reconnectDelay);
+        } else {
+            console.error('Max reconnection attempts reached');
+        }
+    }
+
+    function updateConnectionStatus(connected) {
+        const statusDiv = document.getElementById('connectionStatus');
+        if (connected) {
+            statusDiv.textContent = 'Connected';
+            statusDiv.className = 'status';
+        } else {
+            statusDiv.textContent = 'Disconnected';
+            statusDiv.className = 'status disconnected';
+        }
+    }
+
+    function refreshData() {
+        console.log('Refreshing data...');
+        showLoading(true);
+
+        const currentUrl = new URL(window.location.href);
+        const params = new URLSearchParams(currentUrl.search);
+
+        // Preserve filter and sort parameters
+        const pageNumber = document.getElementById('currentPage')?.textContent || '1';
+        const pageSize = document.getElementById('pageSize').value;
+        const sortOrder = document.getElementById('sortOrder').value;
+
+        params.set('pageNumber', pageNumber);
+        params.set('pageSize', pageSize);
+        params.set('sortBy', 'created');
+        params.set('sortOrder', sortOrder);
+
+        fetch(currentUrl.pathname + '?' + params.toString())
+            .then(response => response.text())
+            .then(html => {
+                // Update the page content
+                const parser = new DOMParser();
+                const newDoc = parser.parseFromString(html, 'text/html');
+
+                // Update table
+                const oldTable = document.querySelector('.table-wrapper');
+                const newTable = newDoc.querySelector('.table-wrapper');
+                if (newTable) {
+                    oldTable.innerHTML = newTable.innerHTML;
+                }
+
+                // Update pagination
+                const oldPagination = document.getElementById('paginationControls');
+                const newPagination = newDoc.getElementById('paginationControls');
+                if (newPagination && oldPagination) {
+                    oldPagination.innerHTML = newPagination.innerHTML;
+                } else if (newPagination && !oldPagination && newDoc.querySelector('.pagination-controls')) {
+                    document.querySelector('.pagination-section').after(newPagination);
+                }
+
+                // Update info
+                document.getElementById('recordCount').textContent = newDoc.getElementById('recordCount').textContent;
+                const currentPageEl = newDoc.getElementById('currentPage');
+                if (currentPageEl) {
+                    document.getElementById('currentPage').textContent = currentPageEl.textContent;
+                }
+                const totalPagesEl = newDoc.getElementById('totalPages');
+                if (totalPagesEl) {
+                    document.getElementById('totalPages').textContent = totalPagesEl.textContent;
+                }
+
+                showLoading(false);
+            })
+            .catch(error => {
+                console.error('Error refreshing data:', error);
+                showLoading(false);
+            });
+    }
+
+    function showLoading(show) {
+        const loading = document.getElementById('loading');
+        if (show) {
+            loading.classList.add('show');
+        } else {
+            loading.classList.remove('show');
+        }
+    }
+
+    function previousPage() {
+        const currentPage = parseInt(document.getElementById('currentPage')?.textContent || '1');
+        if (currentPage > 1) {
+            goToPage(currentPage - 1);
+        }
+    }
+
+    function nextPage() {
+        const currentPage = parseInt(document.getElementById('currentPage')?.textContent || '1');
+        const totalPages = parseInt(document.getElementById('totalPages')?.textContent || '1');
+        if (currentPage < totalPages) {
+            goToPage(currentPage + 1);
+        }
+    }
+
+    function goToPage(pageNumber) {
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        // Add pagination and sort parameters
+        const params = new URLSearchParams(formData);
+        params.set('pageNumber', pageNumber);
+        params.set('pageSize', document.getElementById('pageSize').value);
+        params.set('sortBy', 'created');
+        params.set('sortOrder', document.getElementById('sortOrder').value);
+
+        window.location.href = window.location.pathname + '?' + params.toString();
+    }
+
+    function handleSortChange() {
+        const currentPage = 1; // Reset to first page on sort change
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        const params = new URLSearchParams(formData);
+        params.set('pageNumber', currentPage);
+        params.set('pageSize', document.getElementById('pageSize').value);
+        params.set('sortBy', 'created');
+        params.set('sortOrder', document.getElementById('sortOrder').value);
+
+        window.location.href = window.location.pathname + '?' + params.toString();
+    }
+
+    function handlePageSizeChange() {
+        const currentPage = 1; // Reset to first page on page size change
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        const params = new URLSearchParams(formData);
+        params.set('pageNumber', currentPage);
+        params.set('pageSize', document.getElementById('pageSize').value);
+        params.set('sortBy', 'created');
+        params.set('sortOrder', document.getElementById('sortOrder').value);
+
+        window.location.href = window.location.pathname + '?' + params.toString();
+    }
+
+    function resetFilters() {
+        document.getElementById('filterForm').reset();
+        window.location.href = window.location.pathname;
+    }
+
+    // Initialize WebSocket connection on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        connectWebSocket();
+    });
+
+    // Attempt to reconnect periodically
+    setInterval(function() {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            connectWebSocket();
+        }
+    }, 30000);
+</script>
+</body>
+</html>
+

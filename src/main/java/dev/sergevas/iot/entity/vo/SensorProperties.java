@@ -8,4 +8,5 @@ public class SensorProperties {
     public static final String MAC_ADDRESS = "macAddress";
     public static final String SENSOR_NAME = "sensorName";
     public static final String READING_TYPE = "readingType";
+    public static final String PACKAGE_ID = "packageId";
 }
