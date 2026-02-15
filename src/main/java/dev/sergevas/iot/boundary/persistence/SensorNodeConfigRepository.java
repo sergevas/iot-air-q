@@ -1,6 +1,7 @@
 package dev.sergevas.iot.boundary.persistence;
 
 import dev.sergevas.iot.entity.SensorNodeConfigEntity;
+import dev.sergevas.iot.entity.vo.MacAddressVO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -37,5 +38,11 @@ public class SensorNodeConfigRepository {
                 .setParameter("macAddress", macAddress)
                 .getResultStream()
                 .toList();
+    }
+
+    @Transactional
+    public List<MacAddressVO> getMacAddresses() {
+        var query = em.createQuery("select distinct new dev.sergevas.iot.entity.vo.MacAddressVO(c.macAddress) from SensorNodeConfigEntity c", MacAddressVO.class);
+        return query.getResultList();
     }
 }

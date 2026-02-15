@@ -1,7 +1,8 @@
 package dev.sergevas.iot.boundary.rest.api;
 
 import dev.sergevas.iot.boundary.persistence.SensorDataRepository;
-import dev.sergevas.iot.entity.model.SensorReading;
+import dev.sergevas.iot.control.Mapper;
+import dev.sergevas.iot.entity.model.SensorReadings;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -22,7 +23,7 @@ public class SensorReadingsResource {
 
     @GET
     @Produces(APPLICATION_JSON)
-    public List<SensorReading> getSensorNodeInfo(
+    public List<SensorReadings> getSensorNodeInfo(
             @QueryParam("macAddress") String macAddress,
             @QueryParam("sensorName") String sensorName,
             @QueryParam("readingType") String readingType,
@@ -32,8 +33,7 @@ public class SensorReadingsResource {
         var sensorDataEntities = sensorDataRepository.find(macAddress, sensorName, readingType, packageId);
         Log.infof("Found %d sensor data records", sensorDataEntities.size());
         return sensorDataEntities.stream()
-                .map(e -> new SensorReading(e.getPackageId(), e.getMacAddress(), e.getSensorName(), e.getReadingType(),
-                        e.getReadingData()))
+                .map(Mapper::toSensorReadings)
                 .toList();
     }
 }

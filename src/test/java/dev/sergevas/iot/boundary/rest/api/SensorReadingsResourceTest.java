@@ -25,7 +25,7 @@ class SensorReadingsResourceTest {
                 .statusCode(200)
                 .contentType("application/json")
                 .extract().body().asString();
-        assertEquals(TestData.SENSOR_DATA_JSON_01, actualResponseBody, false);
+        assertEquals(TestData.SENSOR_DATA_JSON_01, actualResponseBody, true);
     }
 
     @Test
