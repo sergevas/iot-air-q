@@ -46,4 +46,4 @@ nb-configuration.xml
 *.log
 *.gz
 *.zip
-
+iot_a_q_db/
