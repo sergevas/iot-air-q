@@ -5,21 +5,21 @@ import java.util.Map;
 
 public class FilterVO {
 
-    private Map<String, List<String>> filters;
+    private Map<String, List<PropertyValue>> filters;
 
-    public FilterVO(Map<String, List<String>> filters) {
+    public FilterVO(Map<String, List<PropertyValue>> filters) {
         this.filters = filters;
     }
 
-    public Map<String, List<String>> getFilters() {
+    public Map<String, List<PropertyValue>> getFilters() {
         return filters;
     }
 
-    public void setFilters(Map<String, List<String>> filters) {
+    public void setFilters(Map<String, List<PropertyValue>> filters) {
         this.filters = filters;
     }
 
-    public List<String> getFilterValues(String filterKey) {
+    public List<PropertyValue> getFilterValues(String filterKey) {
         return filters.get(filterKey);
     }
 
