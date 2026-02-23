@@ -1,7 +1,7 @@
 package dev.sergevas.iot.boundary.persistence;
 
+import dev.sergevas.iot.IotAirQualityException;
 import dev.sergevas.iot.entity.SensorNodeConfigEntity;
-import dev.sergevas.iot.entity.vo.MacAddressVO;
 import dev.sergevas.iot.entity.vo.PropertyValue;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -9,10 +9,23 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import static dev.sergevas.iot.entity.vo.SensorProperties.MAC_ADDRESS;
+import static dev.sergevas.iot.entity.vo.SensorProperties.PACKAGE_ID;
+import static dev.sergevas.iot.entity.vo.SensorProperties.READING_TYPE;
+import static dev.sergevas.iot.entity.vo.SensorProperties.SENSOR_NAME;
 
 @ApplicationScoped
 public class SensorNodeConfigRepository {
+
+    private final static Map<Class<? extends PropertyValue>, String> propertyMap = Map.ofEntries(
+            Map.entry(PropertyValue.SensorName.class, SENSOR_NAME),
+            Map.entry(PropertyValue.MacAddress.class, MAC_ADDRESS),
+            Map.entry(PropertyValue.ReadingType.class, READING_TYPE),
+            Map.entry(PropertyValue.PackageId.class, PACKAGE_ID)
+    );
 
     @Inject
     EntityManager em;
@@ -42,19 +55,15 @@ public class SensorNodeConfigRepository {
     }
 
     @Transactional
-    public List<MacAddressVO> getMacAddresses() {
-        var query = em.createQuery("select distinct new dev.sergevas.iot.entity.vo.MacAddressVO(c.macAddress) from SensorNodeConfigEntity c", MacAddressVO.class);
-        return query.getResultList();
-    }
-
-    @Transactional
-    public List<PropertyValue> getSensorPropertyValues(Class<PropertyValue> type, String fieldName) {
-        switch (type) {
-            case PropertyValue.MacAddress.class ->
-                    em.createQuery("select distinct new dev.sergevas.iot.entity.vo.MacAddress(c.macAddress) from SensorNodeConfigEntity c", type);
-
+    public List<? extends PropertyValue> getSensorPropertyValues(Class<? extends PropertyValue> type) {
+        if (!propertyMap.containsKey(type)) {
+            throw new IotAirQualityException("Unsupported property value type: " + type.getName());
         }
-        var query =
-        return query.getResultList();
+        return em.createQuery(
+                        "select distinct new dev.sergevas.iot.entity.vo.PropertyValue."
+                                + type.getSimpleName()
+                                + "(c.propValue) from SensorNodeConfigEntity c where c.propName = :propName", type)
+                .setParameter("propName", propertyMap.get(type))
+                .getResultList();
     }
 }
