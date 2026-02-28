@@ -22,7 +22,7 @@ public class TimerService implements Scheduled.SkipPredicate {
     public void executeScheduled() {
         Log.info("Execute scheduled task...");
         sensorNodeConfigRepository.getSensorPropertyValues(PropertyValue.MacAddress.class).forEach(macAddress ->
-                sensorReadingsUseCase.fetchAndStoreSensorReadings(macAddress.getValue()));
+                sensorReadingsUseCase.fetchAndStoreSensorReadings(macAddress.value()));
     }
 
     @Override
