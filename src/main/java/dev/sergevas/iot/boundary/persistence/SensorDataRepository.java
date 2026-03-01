@@ -42,6 +42,7 @@ public class SensorDataRepository {
 
     @Transactional
     public List<SensorDataEntity> find(String macAddress, String sensorName, String readingType, UUID packageId) {
+        Log.debugf("Enter find() macAddress=%s, sensorName=%s, readingType=%s, packageId=%s", macAddress, sensorName, readingType, packageId);
         var queryUtils = new QueryUtils(SEARCH_QUERY_BASE);
         queryUtils.appendWhereConditionNotNull("macAddress", macAddress, "s.macAddress = :macAddress");
         queryUtils.appendWhereConditionNotNull("sensorName", sensorName, "s.sensorName = :sensorName");
@@ -49,7 +50,9 @@ public class SensorDataRepository {
         queryUtils.appendWhereConditionNotNull("packageId", packageId, "s.packageId = :packageId");
         var query = em.createQuery(queryUtils.buildQuery(), SensorDataEntity.class);
         queryUtils.setQueryParameters(query);
-        return query.getResultList();
+        var resultLst = query.getResultList();
+        Log.debugf("Exit find=%s", resultLst);
+        return resultLst;
     }
 
     @Transactional

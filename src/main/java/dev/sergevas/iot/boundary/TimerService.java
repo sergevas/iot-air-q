@@ -27,6 +27,8 @@ public class TimerService implements Scheduled.SkipPredicate {
     @Override
     public boolean test(ScheduledExecution execution) {
         Log.debug("Test scheduled execution skip criteria");
-        return sensorNodeConfigRepository.getMacAddresses().isEmpty();
+        var shouldSkip = sensorNodeConfigRepository.getMacAddresses().isEmpty();
+        Log.debugf("shouldSkip=%b", shouldSkip);
+        return shouldSkip;
     }
 }
