@@ -2,7 +2,6 @@ package dev.sergevas.iot.boundary;
 
 import dev.sergevas.iot.boundary.persistence.SensorNodeConfigRepository;
 import dev.sergevas.iot.control.SensorReadingsUseCase;
-import dev.sergevas.iot.entity.vo.PropertyValue;
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.scheduler.ScheduledExecution;
@@ -21,13 +20,13 @@ public class TimerService implements Scheduled.SkipPredicate {
     @Scheduled(every = "${sensor.node.data.fetch.interval}", skipExecutionIf = TimerService.class)
     public void executeScheduled() {
         Log.info("Execute scheduled task...");
-        sensorNodeConfigRepository.getSensorPropertyValues(PropertyValue.MacAddress.class).forEach(macAddress ->
+        sensorNodeConfigRepository.getMacAddresses().forEach(macAddress ->
                 sensorReadingsUseCase.fetchAndStoreSensorReadings(macAddress.value()));
     }
 
     @Override
     public boolean test(ScheduledExecution execution) {
         Log.debug("Test scheduled execution skip criteria");
-        return sensorNodeConfigRepository.getSensorPropertyValues(PropertyValue.MacAddress.class).isEmpty();
+        return sensorNodeConfigRepository.getMacAddresses().isEmpty();
     }
 }
