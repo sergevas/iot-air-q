@@ -1,6 +1,7 @@
 package dev.sergevas.iot.boundary.rest.api;
 
 import dev.sergevas.iot.boundary.persistence.SensorDataRepository;
+import dev.sergevas.iot.control.FilterService;
 import dev.sergevas.iot.control.Mapper;
 import dev.sergevas.iot.entity.model.SensorReadings;
 import io.quarkus.logging.Log;
@@ -13,8 +14,10 @@ import jakarta.ws.rs.QueryParam;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
+import static dev.sergevas.iot.entity.vo.SensorProperties.MAC_ADDRESS;
+import static dev.sergevas.iot.entity.vo.SensorProperties.READING_TYPE;
+import static dev.sergevas.iot.entity.vo.SensorProperties.SENSOR_NAME;
 import static jakarta.ws.rs.core.MediaType.TEXT_HTML;
 
 @Path("ui")
@@ -22,6 +25,9 @@ public class SensorReadingsUIResource {
 
     @Inject
     SensorDataRepository sensorDataRepository;
+
+    @Inject
+    FilterService filterService;
 
     @Inject
     Template sensorReadings;
@@ -33,15 +39,14 @@ public class SensorReadingsUIResource {
             @QueryParam("macAddress") String macAddress,
             @QueryParam("sensorName") String sensorName,
             @QueryParam("readingType") String readingType,
-            @QueryParam("packageId") UUID packageId,
             @QueryParam("sortBy") String sortBy,
             @QueryParam("sortOrder") String sortOrder,
             @QueryParam("pageNumber") Integer pageNumber,
             @QueryParam("pageSize") Integer pageSize) {
 
-        Log.infof("Enter getSensorReadingsUI(): macAddress=%s, sensorName=%s, readingType=%s, packageId=%s, " +
+        Log.infof("Enter getSensorReadingsUI(): macAddress=%s, sensorName=%s, readingType=%s, " +
                         "sortBy=%s, sortOrder=%s, pageNumber=%s, pageSize=%s",
-                macAddress, sensorName, readingType, packageId, sortBy, sortOrder, pageNumber, pageSize);
+                macAddress, sensorName, readingType, sortBy, sortOrder, pageNumber, pageSize);
 
         // Set default values
         if (sortBy == null || sortBy.isEmpty()) {
@@ -54,11 +59,11 @@ public class SensorReadingsUIResource {
             pageNumber = 1;
         }
         if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
+            pageSize = 20;
         }
 
         // Get sensor data
-        var sensorDataEntities = sensorDataRepository.find(macAddress, sensorName, readingType, packageId);
+        var sensorDataEntities = sensorDataRepository.find(macAddress, sensorName, readingType, null);
         var sensorReadingsList = sensorDataEntities.stream()
                 .map(Mapper::toSensorReadings)
                 .toList();
@@ -98,11 +103,12 @@ public class SensorReadingsUIResource {
         Log.infof("Found %d records, page %d of %d with %d records per page, returning %d records",
                 totalRecords, pageNumber, totalPages, pageSize, pageContent.size());
 
+        var filter = filterService.getFilter();
+
         return sensorReadings
                 .data("macAddress", macAddress != null ? macAddress : "")
                 .data("sensorName", sensorName != null ? sensorName : "")
                 .data("readingType", readingType != null ? readingType : "")
-                .data("packageId", packageId != null ? packageId.toString() : "")
                 .data("sortBy", sortBy)
                 .data("sortOrder", sortOrder)
                 .data("pageNumber", pageNumber)
@@ -110,6 +116,9 @@ public class SensorReadingsUIResource {
                 .data("totalRecords", totalRecords)
                 .data("totalPages", totalPages)
                 .data("readings", pageContent)
+                .data("macAddresses", filter.getFilterPropertyValues(MAC_ADDRESS))
+                .data("sensorNames", filter.getFilterPropertyValues(SENSOR_NAME))
+                .data("readingTypes", filter.getFilterPropertyValues(READING_TYPE))
                 .render();
     }
 }

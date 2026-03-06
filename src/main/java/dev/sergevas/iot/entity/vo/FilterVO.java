@@ -19,8 +19,18 @@ public class FilterVO {
         this.filters = filters;
     }
 
-    public List<? extends FilterProperty> getFilterValues(String filterKey) {
+    public List<? extends FilterProperty> getFilterProperties(String filterKey) {
         return filters.get(filterKey);
+    }
+
+    public List<String> getFilterPropertyValues(String filterKey) {
+        List<? extends FilterProperty> properties = filters.get(filterKey);
+        if (properties == null) {
+            return List.of();
+        }
+        return properties.stream()
+                .map(FilterProperty::value)
+                .toList();
     }
 
     @Override
