@@ -10,14 +10,14 @@
 CCS811 ccs811(-1, CCS811_SLAVEADDR_1);
 uint16_t ccs811_baseline;
 
-const char *WIFI_SSID = "pine6401";
-const char *WIFI_PASSWORD = "Very$trongPa$swd!2026";
+const char *WIFI_SSID = "********";
+const char *WIFI_PASSWORD = "********";
 const int WIFI_NUM_OF_RETRIES = 20;
 const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
 const char *GATEWAY_HOST = "192.168.1.124";
 const uint16_t GATEWAY_PORT = 8080;
-const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/config";
+const String GATEWAY_IP_RECEIVE_API = "/iot-air-q/config";
 
 const String SHT31X = "SHT31X";
 const String CCS811 = "CCS811";
@@ -32,6 +32,7 @@ const String NAME = "name";
 const String TYPE = "type";
 const String DATA = "data";
 const String IP = "ip";
+const String PORT = "port";
 const String MAC_ADDRESS = "macAddress";
 const String PACKAGE_ID = "packageId";
 
@@ -80,12 +81,42 @@ void initWiFi() {
 }
 
 String build_ip_advertising_request_body() {
-
+  JsonDocument doc;
+  doc[IP] = WiFi.localIP().toString();
+  doc[PORT] = 80;
+  doc[MAC_ADDRESS] = WiFi.macAddress();
+  String resp_body;
+  doc.shrinkToFit();
+  serializeJson(doc, resp_body);
+  return resp_body;
 }
 
 void advertise_ip_address() {
   Serial.print("Connecting to gateway...\nStatus: ");
-  Serial.println(httpClient.connect(GATEWAY_HOST, GATEWAY_PORT));
+  if (!httpClient.connect(GATEWAY_HOST, GATEWAY_PORT)) {
+    Serial.println("Connection failed");
+    return;
+  }
+  Serial.println("Connected to server");
+  httpClient.println("PUT " + GATEWAY_IP_RECEIVE_API + " HTTP/1.1");
+  httpClient.print("Host: ");
+  httpClient.println(GATEWAY_HOST);
+  httpClient.println("Content-Type: application/json");
+  httpClient.print("Content-Length: ");
+  String reqBody = build_ip_advertising_request_body();
+  httpClient.println(reqBody.length());
+  httpClient.println("Connection: close");
+  httpClient.println();
+  httpClient.print(reqBody);
+
+  // Читаем ответ от сервера
+  while (httpClient.connected() || httpClient.available()) {
+    if (httpClient.available()) {
+      String line = httpClient.readStringUntil('\n');
+      Serial.println(line);
+    }
+  }
+  httpClient.stop();
 }
 
 String createResourceUrl(String resourceName) {
@@ -286,6 +317,7 @@ void setup() {
 void loop() {
   if (WiFi.status() != WL_CONNECTED) {
     initWiFi();
+    advertise_ip_address();
   }
   httpRestServer.handleClient();
 }

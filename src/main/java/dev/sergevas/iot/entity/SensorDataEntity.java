@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class SensorDataEntity {
     private String sensorName;
     private String readingType;
     private Double readingData;
-    @CurrentTimestamp
+    @CreationTimestamp
     private Instant created;
 
     public SensorDataEntity() {

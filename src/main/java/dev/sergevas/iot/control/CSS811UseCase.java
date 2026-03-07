@@ -31,6 +31,7 @@ public class CSS811UseCase {
         var baseline = sensor.getReadings().stream().findFirst()
                 .filter(r -> "BASELINE".equals(r.getType()))
                 .map(Reading::getData)
+                .map(Double::intValue)
                 .orElseThrow(() -> new IotAirQualityException("CCS811 baseline reading not found from sensor for macAddress=" + macAddress));
         Log.info("CCS811 baseline retrieved from sensor: " + baseline);
         sensorNodeConfigRepository.save(new SensorNodeConfigEntity(macAddress, CCS811_BASELINE, baseline.toString()));
