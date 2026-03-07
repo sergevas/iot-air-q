@@ -122,6 +122,3 @@ public class SensorReadingsUIResource {
                 .render();
     }
 }
-
-
-

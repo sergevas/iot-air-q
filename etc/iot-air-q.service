@@ -1,0 +1,20 @@
+[Unit]
+Description=iot-env application service
+After=syslog.target network.target
+[Service]
+TimeoutStartSec=180
+SuccessExitStatus=143
+User=root
+Group=root
+Type=simple
+StandardOutput=journal
+RemainAfterExit = no
+RestartSec=5
+Restart = always
+WorkingDirectory=/home/iot/app/iot-air-q
+#EnvironmentFile=/home/iot/app/iot-air-q/iot-air-q.conf
+ExecStart=/usr/lib/jvm/jdk21/bin/java -Xms32m -Xmx64m -server -jar /home/iot/app/iot-air-q/iot-air-q.jar
+ExecStop=/bin/kill -15 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
