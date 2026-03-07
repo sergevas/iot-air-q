@@ -5,16 +5,17 @@
 #include <Wire.h>
 #include <SensirionI2cSht3x.h>
 #include "ccs811.h"
+#include "UUID.h"
 
 CCS811 ccs811(-1, CCS811_SLAVEADDR_1);
 uint16_t ccs811_baseline;
 
-const char *WIFI_SSID = "********";
-const char *WIFI_PASSWORD = "*******";
+const char *WIFI_SSID = "pine6401";
+const char *WIFI_PASSWORD = "Very$trongPa$swd!2026";
 const int WIFI_NUM_OF_RETRIES = 20;
 const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
-const char *GATEWAY_HOST = "localhost";
+const char *GATEWAY_HOST = "192.168.1.124";
 const uint16_t GATEWAY_PORT = 8080;
 const char *GATEWAY_IP_RECEIVE_API = "/iot-air-q/config";
 
@@ -51,6 +52,8 @@ typedef struct {
 } CCS811_Readings;
 
 CCS811_Readings ccs811_readings;
+
+UUID uuid;
 
 void initWiFi() {
   Serial.println();
@@ -94,6 +97,9 @@ String build_sensor_readings_resp_body() {
   read_CCS811(&ccs811_readings, &sht3x_readings);
 
   JsonDocument doc;
+  doc[MAC_ADDRESS] = WiFi.macAddress();
+  uuid.generate();
+  doc[PACKAGE_ID] = uuid.toCharArray();
   JsonArray sensorReadings = doc[SENSOR_READINGS].to<JsonArray>();
   JsonObject sensorReadings_0 = sensorReadings.add<JsonObject>();
   sensorReadings_0[NAME] = SHT31X;
