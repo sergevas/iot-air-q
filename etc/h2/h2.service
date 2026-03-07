@@ -1,0 +1,21 @@
+[Unit]
+Description=H2 Database Server
+After=network.target
+
+[Service]
+TimeoutStartSec=180
+SuccessExitStatus=143
+User=root
+Group=root
+Type=simple
+StandardOutput=journal
+RemainAfterExit = no
+RestartSec=5
+Restart = always
+WorkingDirectory=/opt/h2
+ExecStart=/usr/lib/jvm/jdk21/bin/java -cp /opt/h2/h2-2.4.240.jar org.h2.tools.Server -tcp -tcpAllowOthers -web  -webAllowOthers -baseDir /home/iot/app/iot-air-q/h2/data -ifNotExists
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
