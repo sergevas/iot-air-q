@@ -188,6 +188,7 @@ void update_ccs811_baseline() {
     Serial.print("update_ccs811_baseline deserializeJson() failed: ");
     Serial.println(error.c_str());
     httpRestServer.send(500, F("application/json"), "{}");
+    return;
   }
   bool ok = write_ccs811_baseline(doc["readings"][0]["data"]);
   if (!ok) {
