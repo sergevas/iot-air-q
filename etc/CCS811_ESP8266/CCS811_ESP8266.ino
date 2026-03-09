@@ -10,8 +10,8 @@
 CCS811 ccs811(-1, CCS811_SLAVEADDR_1);
 uint16_t ccs811_baseline;
 
-const char *WIFI_SSID = "VAS_2M";
-const char *WIFI_PASSWORD = "LetThereBeLove!2005";
+const char *WIFI_SSID = "********";
+const char *WIFI_PASSWORD = "********";
 const int WIFI_NUM_OF_RETRIES = 20;
 const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
