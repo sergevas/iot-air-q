@@ -10,8 +10,8 @@
 CCS811 ccs811(-1, CCS811_SLAVEADDR_1);
 uint16_t ccs811_baseline;
 
-const char *WIFI_SSID = "********";
-const char *WIFI_PASSWORD = "********";
+const char *WIFI_SSID = "VAS_2M";
+const char *WIFI_PASSWORD = "LetThereBeLove!2005";
 const int WIFI_NUM_OF_RETRIES = 20;
 const uint32_t NETWORK_ERROR_RECOVERY_DELAY = 600000000;
 const uint8_t HTTP_REST_PORT = 80;
@@ -35,6 +35,8 @@ const String IP = "ip";
 const String PORT = "port";
 const String MAC_ADDRESS = "macAddress";
 const String PACKAGE_ID = "packageId";
+const String UDATE_STATUS = "status";
+const String BASELINE = "baseline";
 
 const String baseUrl = "/iot-air-q";
 ESP8266WebServer httpRestServer(HTTP_REST_PORT);
@@ -180,6 +182,18 @@ void get_ccs811_baseline() {
   }
 }
 
+String build_update_ccs811_baseline_resp_body(bool status, uint16_t ccs811_baseline) {
+  JsonDocument doc;
+  JsonObject updated = doc.add<JsonObject>();
+  updated[UDATE_STATUS] = status;
+  updated[BASELINE] = ccs811_baseline;
+  String resp_body;
+  doc.shrinkToFit();
+  serializeJson(doc, resp_body);
+  Serial.println("\nCCS811 update baseline response body: " + resp_body);
+  return resp_body;
+}
+
 void update_ccs811_baseline() {
   String putBody = httpRestServer.arg("plain");
   JsonDocument doc;
@@ -190,11 +204,12 @@ void update_ccs811_baseline() {
     httpRestServer.send(500, F("application/json"), "{}");
     return;
   }
-  bool ok = write_ccs811_baseline(doc["readings"][0]["data"]);
+  uint16_t received_baseline = doc[BASELINE];
+  bool ok = write_ccs811_baseline(received_baseline);
   if (!ok) {
     httpRestServer.send(500, F("application/json"), "{}");
   } else {
-    httpRestServer.send(200, F("application/json"), build_ccs811_baseline_resp_body());
+    httpRestServer.send(200, F("application/json"), build_update_ccs811_baseline_resp_body(ok, received_baseline));
   }
 }
 

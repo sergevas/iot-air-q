@@ -2,6 +2,7 @@ package dev.sergevas.iot.boundary.rest.api;
 
 import dev.sergevas.iot.control.CSS811UseCase;
 import dev.sergevas.iot.control.SensorNodeConfigUseCase;
+import dev.sergevas.iot.entity.model.CCS811Baseline;
 import dev.sergevas.iot.entity.model.SensorNodeInfo;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
@@ -57,5 +58,16 @@ public class SensorNodeConfigResource {
         var sensorNodeInfo = css811UseCase.refreshBaseline(macAddress);
         Log.infof("CCS811 baseline refreshed successfully for macAddress=%s", macAddress);
         return sensorNodeInfo;
+    }
+
+    @PUT
+    @Path("{macAddress}/ccs811/baseline")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    public CCS811Baseline writeBaselineToSensorNode(@PathParam("macAddress") String macAddress) {
+        Log.infof("Enter refreshBaseline(): macAddress=%s", macAddress);
+        var updated = css811UseCase.writeBaseLine(macAddress);
+        Log.infof("CCS811 baseline Sensor Node updated status=%b", updated);
+        return updated;
     }
 }

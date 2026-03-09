@@ -29,7 +29,7 @@ class SensorNodeConfigResourceTest {
     void givenExistedSensorNodeInfo_whenGET_thenShouldReturnSuccessfully() {
         assertEquals("""
                 {
-                    "css811Baseline": 567.0,
+                    "css811Baseline": 567,
                     "ip": "localhost",
                     "macAddress": "00:1B:44:11:3A:B7",
                     "port": 9881
@@ -61,7 +61,7 @@ class SensorNodeConfigResourceTest {
     void givenDeployedSensorNode_whenRefreshBaseline_thenShouldReturnSuccessfully() {
         assertEquals("""
                 {
-                    "css811Baseline": 567.0,
+                    "css811Baseline": 567,
                     "ip": "localhost",
                     "macAddress": "00:1B:44:11:3A:B7",
                     "port": 9881
@@ -72,6 +72,27 @@ class SensorNodeConfigResourceTest {
                 .body("{}")
                 .when()
                 .post("/config/{macAddress}/ccs811/baseline")
+                .prettyPeek()
+                .then()
+                .statusCode(200)
+                .contentType("application/json")
+                .extract()
+                .body().asString(), false);
+    }
+
+    @Test
+    void givenDeployedSensorNode_whenWriteBaseline_thenShouldReturnSuccessfully() {
+        assertEquals("""
+                {
+                    "status": true,
+                    "baseline": 567,
+                }""", given()
+                .header("Content-Type", "application/json")
+                .accept("application/json")
+                .pathParam("macAddress", "00:1B:44:11:3A:B7")
+                .body("{}")
+                .when()
+                .put("/config/{macAddress}/ccs811/baseline")
                 .prettyPeek()
                 .then()
                 .statusCode(200)

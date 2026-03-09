@@ -25,13 +25,13 @@
         "method": "PUT",
         "bodyPatterns": [
           {
-            "equalToJson": "{\"name\":\"CCS811\",\"readings\":[{\"type\":\"BASELINE\",\"data\":567}]}"
+            "equalToJson": "{\"baseline\":567}"
           }
         ]
       },
       "response": {
         "status": 200,
-        "body": "{\"name\":\"CCS811\",\"readings\":[{\"type\":\"BASELINE\",\"data\":567}]}",
+        "body": "{\"status\":true,\"baseline\":567}",
         "headers": {
           "Content-Type": "application/json"
         }
